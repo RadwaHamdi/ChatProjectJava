@@ -26,23 +26,8 @@ public class DatabaseConnection  {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        user user=new user();
-        user.setEmail("Radwa@gmail.com");
-        Vector<user> x=retreiveContactList(user);
-        for(int i=0;i<x.size();i++){
-            System.out.print(x.get(i).getFirstName()+":");
-            System.out.print(x.get(i).getLastName()+":");
-            System.out.print(x.get(i).getUserName()+":");
-            System.out.print(x.get(i).getEmail()+":");
-            System.out.print(x.get(i).getBirthDate()+":");
-            System.out.print(x.get(i).getStatus()+":");
-            System.out.print(x.get(i).getPassward()+":");
-            System.out.println("");
-
-
-
-        }
-        
+        System.out.println(changeuserstatus("Ahmed@gmail.com", 3));
+       
 
     }
    
@@ -85,5 +70,26 @@ public class DatabaseConnection  {
         return  contact_list;
 
 
+    }
+    
+    
+    public static int changeuserstatus(String Email,int status){
+        int inserted=0;
+        try{
+         
+            //note the data base name should change according to the used database also username and passward
+         Connection con=DriverManager.getConnection("jdbc:mysql://localhost/firstdb","root","1234");
+          Statement stmt=con.createStatement();
+          String querystring=new String("update user set status="+status+" where email='"+Email+"'");
+          
+          stmt.executeUpdate(querystring);
+          con.close();
+          inserted=1;
+
+        }catch(Exception e){       
+        e.printStackTrace();
+        }
+        return inserted;
+        
     }
 }

@@ -33,11 +33,15 @@ public class Controller implements Serializable {
               obj.registerCleint(new CleintModelInterfaceImplementation(this));
               obj.printHellofromserver();
               user newcleint=new user();
+              //note the info of the user should be set from the log in method 
+              //or we should here select by the user_email which user entered in login and select all info about this user from
+              //database and set all info of this user here using setters
               newcleint.setEmail("Radwa@gmail.com");
+              newcleint.setUserName("Radwa Hamdi");
               contactlist=obj.retreiveContactList(newcleint);
-              veiw=new MainFrame(this, contactlist);
+              veiw=new MainFrame(this, contactlist,newcleint);
             //this should be removed this is just for testing logic
-             for(int i=0;i<contactlist.size();i++){
+          /*   for(int i=0;i<contactlist.size();i++){
             System.out.print(contactlist.get(i).getFirstName()+":");
             System.out.print(contactlist.get(i).getLastName()+":");
             System.out.print(contactlist.get(i).getUserName()+":");
@@ -49,7 +53,8 @@ public class Controller implements Serializable {
              }
              //
               
-              
+            */
+             
 
 
         
@@ -67,6 +72,15 @@ public class Controller implements Serializable {
             e.printStackTrace();
         }
 
+    }
+    public int setStatus(String email,int status){
+        int inserted=0;
+        try{
+               inserted=obj.setStatusServer(email, status);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return inserted;
     }
 
 }

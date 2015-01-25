@@ -56,7 +56,8 @@ import common.user;
 public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface{
     Controller controller;
     Vector<user> contactlist;
-    public MainFrame(Controller c,Vector<user> contact_list)  {
+    user cleint;
+    public MainFrame(Controller c,Vector<user> contact_list,user current_user)  {
         try{
             
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -67,7 +68,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
         initComponents();
         controller=c;
         contactlist=contact_list;
-        
+        cleint=current_user;
         setLayout(new BorderLayout());
         setSize(300, 600);
         setResizable(false);
@@ -115,7 +116,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
             toolbar_panel.add("North",toolBar);
             north_panel.add(toolbar_panel);
             
-            JComboBox states_combobox=new JComboBox();
+            final JComboBox states_combobox=new JComboBox();
             states_combobox.addItem("Online");
             states_combobox.addItem("Dissconected");
             states_combobox.addItem("Available");
@@ -125,7 +126,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
          
 
             
-                JLabel user_name=new JLabel("Alaa Hussein ");
+                JLabel user_name=new JLabel(cleint.getUserName());
                 user_name.setFont(new Font("Aharoni", Font.BOLD, 18));
               
                 combobox_panel.add( "Center",user_name);
@@ -176,7 +177,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
              names.addListSelectionListener(new ListSelectionListener() {
 
                 public void valueChanged(ListSelectionEvent e) {
-                    System.out.println("item selected");
+                    System.out.println("freind is selected");
                 }
             });
 
@@ -216,7 +217,26 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
             states_combobox.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("here there is item selected from combobox");
+                    
+                   String new_status=states_combobox.getSelectedItem().toString();
+                   if(new_status.equals("Online")){
+                       setstatus(cleint.getEmail(), 0);
+                       System.out.println(cleint.getEmail()+"0");
+                   }
+                   else if(new_status.equals("Dissconected")){
+                       setstatus(cleint.getEmail(), 1);
+                       System.out.println(cleint.getEmail()+"1");
+                   }
+                   else if(new_status.equals("Away")){
+                       setstatus(cleint.getEmail(), 2);
+                       System.out.println(cleint.getEmail()+"2");
+                   }
+                   else if(new_status.equals("Available")){
+                       setstatus(cleint.getEmail(), 3);
+                       System.out.println(cleint.getEmail()+"3");
+                   }
+                   
+                   
                 }
             });
            
@@ -271,6 +291,8 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JToolBar jToolBar2;
     // End of variables declaration//GEN-END:variables
-
+    public void setstatus(String user_email,int status){
+        controller.setStatus(user_email, status);
+    }
    
 }

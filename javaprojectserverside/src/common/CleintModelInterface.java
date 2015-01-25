@@ -14,5 +14,6 @@ import java.rmi.RemoteException;
  */
 public interface CleintModelInterface extends Remote {
     public String printHellofromcleint() throws RemoteException;
+    
 
 }

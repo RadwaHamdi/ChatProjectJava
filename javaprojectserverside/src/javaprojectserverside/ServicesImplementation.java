@@ -41,6 +41,12 @@ public class ServicesImplementation extends UnicastRemoteObject implements Servi
         DatabaseConnection con=new DatabaseConnection();
         return con.retreiveContactList(u);
     }
+    public int setStatusServer(String Email,int status){
+        DatabaseConnection con=new DatabaseConnection();
+        return con.changeuserstatus(Email, status);
+        
+    
+    }
 
     
 

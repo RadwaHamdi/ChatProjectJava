@@ -18,5 +18,6 @@ public interface ServicesInterface extends Remote{
 //this method just for test
     public String printHellofromserver() throws RemoteException;
     public void registerCleint(CleintModelInterface newcleint)throws RemoteException;
-    public Vector retreiveContactList(user u)throws RemoteException;
+    public Vector<user> retreiveContactList(user u)throws RemoteException;
+    public int setStatusServer(String Email,int status) throws RemoteException;
 }
