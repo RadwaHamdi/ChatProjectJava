@@ -51,24 +51,25 @@ public class customlist extends JPanel implements ListCellRenderer {
 
         try {
             //here you should replace contacts.jpg  with user image
-              Image person_Icon = ImageIO.read(getClass().getResource("final_icon.png"));
+              Image person_Icon = ImageIO.read(getClass().getResource("friend.jpg"));
               JLabel l=new  JLabel(new ImageIcon(person_Icon));
              //l.setBackground(Color.white);
 
               p1.add(l);
               l=new  JLabel(value.toString());
-              l.setFont(new Font("Aharoni", Font.BOLD, 12));
+              l.setFont(new Font("Aharoni", Font.BOLD, 15));
              //l.setBackground(Color.white);
               p1. add("Center",l);
-              p.setBackground(Color.white);
-              p1.setBackground(Color.white);
+              
+              p.setBackground(new Color(244,244,244));
+              p1.setBackground(new Color(244,244,244));
              int status =friends_statuses.get(index).getStatus();
              if(status==0){
                  Image state_Icon = ImageIO.read(getClass().getResource("on.png"));
                  l=new  JLabel(new ImageIcon(state_Icon));
              }
              else if(status==1){
-             Image state_Icon = ImageIO.read(getClass().getResource("off.png"));
+             Image state_Icon = ImageIO.read(getClass().getResource("off_1.png"));
               l=new  JLabel(new ImageIcon(state_Icon));
              }
              else if(status==2){
@@ -76,11 +77,11 @@ public class customlist extends JPanel implements ListCellRenderer {
               l=new  JLabel(new ImageIcon(state_Icon));
              }
              else if(status==3){
-             Image state_Icon = ImageIO.read(getClass().getResource("avail.png"));
+             Image state_Icon = ImageIO.read(getClass().getResource("avail .png"));
               l=new  JLabel(new ImageIcon(state_Icon));
              }
              else{
-             Image state_Icon = ImageIO.read(getClass().getResource("off.png"));
+             Image state_Icon = ImageIO.read(getClass().getResource("off_1.png"));
               l=new  JLabel(new ImageIcon(state_Icon));
              }
              
@@ -94,8 +95,8 @@ public class customlist extends JPanel implements ListCellRenderer {
               p.add("East",l);
               //p.setBackground(Color.white);
             if (isSelected){
-            p.setBackground(new Color(0,92,110));
-             p1.setBackground(new Color(0,92,110));
+            p.setBackground(new Color(0,107,172));
+             p1.setBackground(new Color(0,107,172));
 
             }
 

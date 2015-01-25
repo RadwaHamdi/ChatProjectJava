@@ -85,34 +85,39 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
             
 
             JToolBar toolBar = new JToolBar();
+            toolBar.setBackground(new Color(0,107,172));
             JPanel toolbar_panel=new JPanel(new BorderLayout());
-            Image add_user_Icon = ImageIO.read(getClass().getResource("newadd.png"));
-            Image contacts_Icon = ImageIO.read(getClass().getResource("contacts.jpg"));
+            Image add_user_Icon = ImageIO.read(getClass().getResource("add.png"));
+            //Image contacts_Icon = ImageIO.read(getClass().getResource("contacts.jpg"));
             Image chat_Icon = ImageIO.read(getClass().getResource("chat.jpg"));
             Image remove_user_Icon = ImageIO.read(getClass().getResource("remove contact.jpg"));
             Image sign_out_Icon = ImageIO.read(getClass().getResource("sign out.jpg"));
+            Image search_user_Icon = ImageIO.read(getClass().getResource("search.png"));
 
 
             JButton add_contact_Button = new JButton(new ImageIcon(add_user_Icon));
-            JButton contacts_Button = new JButton(new ImageIcon(contacts_Icon));
+           // JButton contacts_Button = new JButton(new ImageIcon(contacts_Icon));
             JButton chat_Button = new JButton(new ImageIcon(chat_Icon));
             JButton remove_user_Button = new JButton(new ImageIcon(remove_user_Icon));
             JButton sign_out_Button = new JButton(new ImageIcon(sign_out_Icon));
+            JButton search_user_Button = new JButton(new ImageIcon(search_user_Icon));
 
              add_contact_Button.setBorder(emptyBorder);
-             contacts_Button.setBorder(emptyBorder);
+             //contacts_Button.setBorder(emptyBorder);
              chat_Button.setBorder(emptyBorder);
              remove_user_Button.setBorder(emptyBorder);
              sign_out_Button.setBorder(emptyBorder);
+             search_user_Button.setBorder(emptyBorder);
 
 
             
-            setBackground(new Color(0, 128, 255));
+            //setBackground(new Color(97,121,172));
             toolBar.add(add_contact_Button);
-            toolBar.add(contacts_Button);
+            //toolBar.add(contacts_Button);
             toolBar.add(chat_Button);
             toolBar.add(remove_user_Button);
             toolBar.add(sign_out_Button);
+            toolBar.add(search_user_Button);
             toolbar_panel.add("North",toolBar);
             north_panel.add(toolbar_panel);
             
@@ -123,10 +128,10 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
             states_combobox.addItem("Away"); 
             
             states_combobox.setRenderer(new customcombobox());
-         
+           
 
             
-                JLabel user_name=new JLabel(cleint.getUserName());
+                JLabel user_name=new JLabel(cleint.getUserName()+"   ");
                 user_name.setFont(new Font("Aharoni", Font.BOLD, 18));
               
                 combobox_panel.add( "Center",user_name);
@@ -135,14 +140,16 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
                 JPanel name=new JPanel();
                 
                 name.setLayout(new FlowLayout(FlowLayout.LEFT));
-                Image my_pic= ImageIO.read(getClass().getResource("final_icon.png"));
+                Image my_pic= ImageIO.read(getClass().getResource("friend.jpg"));
                 JButton mypic=new JButton(new ImageIcon(my_pic));
                 
                 mypic.setBorder(emptyBorder);
-                
+                combobox_panel.setBackground(new Color(0,107,172));
                 name.add(mypic);             
                 name.add(combobox_panel);
+                
                 north_panel.add(name);
+           
                 
                 
 
@@ -159,19 +166,21 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
             names.setCellRenderer(new customlist(contactlist));
             JScrollPane contact_list_scrollpane=new JScrollPane(names);
             contact_list_scrollpane.setSize(300, 100);
-            name.setBackground(Color.white);
+            name.setBackground(new Color(0,107,172));
+            names.setBackground(new Color(244,244,244));
+            names.setBorder(BorderFactory.createTitledBorder("Contacts"));
 
            
              add("North",north_panel);            
              add("Center",contact_list_scrollpane);
              JPanel west_panel=new JPanel();
-             west_panel.setBackground(new Color(0,92,110));
+             west_panel.setBackground(new Color(0,107,172));
              add("West",west_panel);
              JPanel east_panel=new JPanel();
-             east_panel.setBackground(new Color(0,92,110));
+             east_panel.setBackground(new Color(0,107,172));
              add("East",east_panel);
              JPanel south_panel=new JPanel();
-             south_panel.setBackground(new Color(0,92,110));//radwa
+             south_panel.setBackground(new Color(0,107,172));//radwa
              add("South",south_panel);
 
              names.addListSelectionListener(new ListSelectionListener() {
@@ -187,12 +196,12 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
                 }
             });
 
-            contacts_Button.addActionListener(new ActionListener() {//remove
+            /*contacts_Button.addActionListener(new ActionListener() {//remove
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("contacts");
                 }
             });
-
+*/
              chat_Button.addActionListener(new ActionListener() {//remove
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("chat");
@@ -211,6 +220,12 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
             sign_out_Button.addActionListener(new ActionListener() {//remove
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("sign_out");
+                }
+            });
+            search_user_Button.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("search users");
                 }
             });
             

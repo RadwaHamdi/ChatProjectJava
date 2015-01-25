@@ -20,6 +20,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
 /**
@@ -33,6 +34,7 @@ public class customcombobox extends JLabel implements ListCellRenderer {
      label.setBackground(Color.white);
      label.setOpaque(true);
      label.setText(value.toString());
+        
 
 
      if(index==0){
