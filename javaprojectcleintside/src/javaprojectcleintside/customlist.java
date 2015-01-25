@@ -19,18 +19,23 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu.Separator;
 import javax.swing.ListCellRenderer;
+import javax.swing.border.EmptyBorder;
 
 /**
  *
@@ -53,8 +58,8 @@ public class customlist extends JPanel implements ListCellRenderer {
             //here you should replace contacts.jpg  with user image
               Image person_Icon = ImageIO.read(getClass().getResource("friend.jpg"));
               JLabel l=new  JLabel(new ImageIcon(person_Icon));
-             //l.setBackground(Color.white);
-
+              
+              
               p1.add(l);
               l=new  JLabel(value.toString());
               l.setFont(new Font("Aharoni", Font.BOLD, 15));

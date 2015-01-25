@@ -49,6 +49,9 @@ import javax.swing.event.MenuListener;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 import common.CleintVeiwInterface;
 import common.user;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import javax.swing.event.MouseInputListener;
 /**
  *
  * @author Alaa
@@ -58,6 +61,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
     Vector<user> contactlist;
     user cleint;
     public MainFrame(Controller c,Vector<user> contact_list,user current_user)  {
+        
         try{
             
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -88,22 +92,23 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
             toolBar.setBackground(new Color(0,107,172));
             JPanel toolbar_panel=new JPanel(new BorderLayout());
             Image add_user_Icon = ImageIO.read(getClass().getResource("add.png"));
-            //Image contacts_Icon = ImageIO.read(getClass().getResource("contacts.jpg"));
+            Image contacts_Icon = ImageIO.read(getClass().getResource("images.jpg"));
             Image chat_Icon = ImageIO.read(getClass().getResource("chat.jpg"));
             Image remove_user_Icon = ImageIO.read(getClass().getResource("remove contact.jpg"));
             Image sign_out_Icon = ImageIO.read(getClass().getResource("sign out.jpg"));
             Image search_user_Icon = ImageIO.read(getClass().getResource("search.png"));
+            
 
 
             JButton add_contact_Button = new JButton(new ImageIcon(add_user_Icon));
-           // JButton contacts_Button = new JButton(new ImageIcon(contacts_Icon));
+            JButton contacts_Button = new JButton(new ImageIcon(contacts_Icon));
             JButton chat_Button = new JButton(new ImageIcon(chat_Icon));
             JButton remove_user_Button = new JButton(new ImageIcon(remove_user_Icon));
             JButton sign_out_Button = new JButton(new ImageIcon(sign_out_Icon));
             JButton search_user_Button = new JButton(new ImageIcon(search_user_Icon));
 
              add_contact_Button.setBorder(emptyBorder);
-             //contacts_Button.setBorder(emptyBorder);
+             contacts_Button.setBorder(emptyBorder);
              chat_Button.setBorder(emptyBorder);
              remove_user_Button.setBorder(emptyBorder);
              sign_out_Button.setBorder(emptyBorder);
@@ -115,9 +120,11 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
             toolBar.add(add_contact_Button);
             //toolBar.add(contacts_Button);
             toolBar.add(chat_Button);
-            toolBar.add(remove_user_Button);
-            toolBar.add(sign_out_Button);
+            toolBar.add(contacts_Button); 
+            toolBar.add(remove_user_Button);                
             toolBar.add(search_user_Button);
+            toolBar.add(sign_out_Button);
+            
             toolbar_panel.add("North",toolBar);
             north_panel.add(toolbar_panel);
             
@@ -183,28 +190,46 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
              south_panel.setBackground(new Color(0,107,172));//radwa
              add("South",south_panel);
 
-             names.addListSelectionListener(new ListSelectionListener() {
+             names.addMouseListener(new MouseInputListener() {
 
-                public void valueChanged(ListSelectionEvent e) {
-                    System.out.println("freind is selected");
+                public void mouseClicked(MouseEvent e) {
+                }
+
+                public void mousePressed(MouseEvent e) {
+                  
+                }
+
+                public void mouseReleased(MouseEvent e) {
+                }
+
+                public void mouseEntered(MouseEvent e) {
+                }
+
+                public void mouseExited(MouseEvent e) {
+                }
+
+                public void mouseDragged(MouseEvent e) {
+                }
+
+                public void mouseMoved(MouseEvent e) {
                 }
             });
 
               add_contact_Button.addActionListener(new ActionListener() {//remove
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("add contacts");
+                    addFriend newfreind=new addFriend();
                 }
             });
 
-            /*contacts_Button.addActionListener(new ActionListener() {//remove
+            contacts_Button.addActionListener(new ActionListener() {//remove
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("contacts");
+                    StartChatGroup newgroup=new StartChatGroup();
                 }
             });
-*/
+
              chat_Button.addActionListener(new ActionListener() {//remove
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("chat");
+                   Chat newchat=new Chat();
                 }
             });
 
@@ -212,7 +237,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
 
              remove_user_Button.addActionListener(new ActionListener() {//remove
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("remove user ");
+                   RemoveFriend freind=new RemoveFriend();
                 }
             });
 
