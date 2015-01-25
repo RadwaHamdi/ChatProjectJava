@@ -10,6 +10,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Vector;
+import javax.swing.JOptionPane;
 import org.omg.CORBA.MARSHAL;
 
 /**
@@ -19,55 +20,49 @@ import org.omg.CORBA.MARSHAL;
 public class Controller implements Serializable {
     CleintModelInterface model;
     CleintVeiwInterface veiw;
-    ServicesInterface obj;
+    Vector<user> contactlist;
+    ServicesInterface  obj;
 
-    public Controller (CleintVeiwInterface v)throws RemoteException{
-        this.veiw=v;
-        //here call veiw.setcontroller(this) or in main
-        //call 
+    public Controller ()throws RemoteException{
         model=new CleintModelInterfaceImplementation(this);
          try {
-            Registry reg = LocateRegistry.getRegistry("127.0.0.1", 5005);
-            obj = (ServicesInterface) reg.lookup("chatservice");
-
              
-             obj.registerCleint(new CleintModelInterfaceImplementation(this));
-             obj.printHellofromserver();
-             user newcleint=new user();
-             newcleint.setEmail("Radwa@gmail.com");
              
-           
-            Vector<user> x=obj.retreiveContactList(newcleint);
-            
-             for(int i=0;i<x.size();i++){
-            System.out.print(x.get(i).getFirstName()+":");
-            System.out.print(x.get(i).getLastName()+":");
-            System.out.print(x.get(i).getUserName()+":");
-            System.out.print(x.get(i).getEmail()+":");
-            System.out.print(x.get(i).getBirthDate()+":");
-            System.out.print(x.get(i).getStatus()+":");
-            System.out.print(x.get(i).getPassward()+":");
+             Registry reg = LocateRegistry.getRegistry("127.0.0.1", 5005);
+              obj = (ServicesInterface) reg.lookup("chatservice");
+              obj.registerCleint(new CleintModelInterfaceImplementation(this));
+              obj.printHellofromserver();
+              user newcleint=new user();
+              newcleint.setEmail("Radwa@gmail.com");
+              contactlist=obj.retreiveContactList(newcleint);
+              veiw=new MainFrame(this, contactlist);
+            //this should be removed this is just for testing logic
+             for(int i=0;i<contactlist.size();i++){
+            System.out.print(contactlist.get(i).getFirstName()+":");
+            System.out.print(contactlist.get(i).getLastName()+":");
+            System.out.print(contactlist.get(i).getUserName()+":");
+            System.out.print(contactlist.get(i).getEmail()+":");
+            System.out.print(contactlist.get(i).getBirthDate()+":");
+            System.out.print(contactlist.get(i).getStatus()+":");
+            System.out.print(contactlist.get(i).getPassward()+":");
             System.out.println("");
              }
+             //
+              
+              
 
 
-
-
-
-
-
-
-
+        
         } catch (Exception ex) {
-             ex.printStackTrace();
+              JOptionPane.showMessageDialog(null, "Server is off");
+               System.exit(0);
         }
     }
     public static void main(String[] args) {
-        CleintVeiwInterface v=new MainFrame();
+        
         try{
-        new Controller(v);
-
-
+        Controller c=new Controller();
+        
         }catch(Exception e){
             e.printStackTrace();
         }

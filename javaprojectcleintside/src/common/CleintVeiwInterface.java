@@ -5,6 +5,7 @@
 
 package common;
 
+import java.util.Vector;
 import javaprojectcleintside.Controller;
 
 /**
@@ -12,6 +13,6 @@ import javaprojectcleintside.Controller;
  * @author Alaa
  */
 public interface CleintVeiwInterface {
-    public void setController(Controller c);
+  
 
 }

@@ -48,25 +48,26 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MenuListener;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 import common.CleintVeiwInterface;
+import common.user;
 /**
  *
  * @author Alaa
  */
 public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface{
     Controller controller;
-
-    /** Creates new form MainFrame */
-    public void setController(Controller c){
-        controller=c;
-    }
-    public MainFrame()  {
+    Vector<user> contactlist;
+    public MainFrame(Controller c,Vector<user> contact_list)  {
         try{
+            
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         SwingUtilities.updateComponentTreeUI(this);
         }catch(Exception e){
                 e.printStackTrace();
         }
         initComponents();
+        controller=c;
+        contactlist=contact_list;
+        
         setLayout(new BorderLayout());
         setSize(300, 600);
         setResizable(false);
@@ -147,22 +148,14 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
 
 
             Vector contacts=new Vector();
-            contacts.add("Radwa Hesham");
-            contacts.add("Hussein Ali");
-            contacts.add("Ali Kamel");
-            contacts.add("Ahmed Medaht");
-            contacts.add("Maram osama");
-            contacts.add("May Ahmed");
-            contacts.add("Waleed Ahmed");
-            contacts.add("Mohamed Ali");
-            contacts.add("Sayed Hamed");
-            contacts.add("Kamel Hussein");
-            contacts.add("Amal Magdy");
-            contacts.add("Radwa Hamdy");
-
-            JList names=new JList(contacts);
+            for(int i=0;i<contactlist.size();i++){
+                contacts.add(contactlist.get(i).getUserName());
+            }
             
-            names.setCellRenderer(new customlist());
+            
+
+            JList names=new JList(contacts);       
+            names.setCellRenderer(new customlist(contactlist));
             JScrollPane contact_list_scrollpane=new JScrollPane(names);
             contact_list_scrollpane.setSize(300, 100);
             name.setBackground(Color.white);
@@ -235,8 +228,8 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
         }
 
 
-
-
+        setVisible(true);
+        
 
     }
 
@@ -270,7 +263,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
 
 
             public void run() {
-                new MainFrame().setVisible(true);
+               // new MainFrame().setVisible(true);
             }
         });
     }
@@ -278,4 +271,6 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JToolBar jToolBar2;
     // End of variables declaration//GEN-END:variables
+
+   
 }
