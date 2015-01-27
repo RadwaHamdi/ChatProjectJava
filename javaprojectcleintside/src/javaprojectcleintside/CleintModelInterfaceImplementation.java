@@ -7,6 +7,7 @@ package javaprojectcleintside;
 import common.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 
 /**
  *
@@ -19,6 +20,11 @@ public class CleintModelInterfaceImplementation extends UnicastRemoteObject impl
     }
     public String printHellofromcleint(){
         return  "Hello,there is a cleint connect server";
+    }
+
+    public void openChatWindow(ArrayList<String> chatMembers, int chat_ID)  {
+        controller.openchatwindows_controller(chatMembers, chat_ID);
+        
     }
 
 }

@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import org.omg.CORBA.MARSHAL;
@@ -22,22 +24,27 @@ public class Controller implements Serializable {
     CleintVeiwInterface veiw;
     Vector<user> contactlist;
     ServicesInterface  obj;
-
+    user newcleint;
+    HashMap<Integer, ArrayList<String>> sessions;
+ 
     public Controller ()throws RemoteException{
         model=new CleintModelInterfaceImplementation(this);
+        sessions=new HashMap<Integer, ArrayList<String>>();
          try {
              
              
              Registry reg = LocateRegistry.getRegistry("127.0.0.1", 5005);
               obj = (ServicesInterface) reg.lookup("chatservice");
-              obj.registerCleint(new CleintModelInterfaceImplementation(this));
+              newcleint=new user();
+              newcleint.setEmail("Radwa@gmail.com");
+              newcleint.setUserName("Radwa Hamdi");
+              obj.registerCleint(new CleintModelInterfaceImplementation(this),newcleint.getEmail());
               obj.printHellofromserver();
-              user newcleint=new user();
+              
               //note the info of the user should be set from the log in method 
               //or we should here select by the user_email which user entered in login and select all info about this user from
               //database and set all info of this user here using setters
-              newcleint.setEmail("Radwa@gmail.com");
-              newcleint.setUserName("Radwa Hamdi");
+              
               contactlist=obj.retreiveContactList(newcleint);
               veiw=new MainFrame(this, contactlist,newcleint);
             //this should be removed this is just for testing logic
@@ -82,5 +89,21 @@ public class Controller implements Serializable {
         }
         return inserted;
     }
-
+    public  void openchatwindows_controller(ArrayList<String> chatMembers, int chat_ID) {
+        sessions.put(chat_ID, chatMembers);
+        //remeber to add chatmembers in GUI of chat frame :)
+        Chat newchatwindow=new Chat();
+        newchatwindow.setFrameID(chat_ID);
+        
+    }
+    public void start_chat_session(ArrayList<String> members){
+        try{
+    int check=obj.startNewChatSessionstr(newcleint.getEmail(), members);
+    if(check==-1){
+        JOptionPane.showMessageDialog(null, "Sorry,you canot start this session");
+    }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 }

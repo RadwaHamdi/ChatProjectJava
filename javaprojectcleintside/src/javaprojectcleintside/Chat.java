@@ -42,6 +42,7 @@ import javax.swing.text.html.ImageView;
  * @author maram
  */
 public class Chat extends javax.swing.JFrame {
+    int frame_id;
     
     class RoundedBorder implements Border {
         int radius;
@@ -189,6 +190,13 @@ public class Chat extends javax.swing.JFrame {
                 
             }
         });
+    }
+    public  void setFrameID(int id){
+        frame_id=id;
+    
+    }
+    public int getFrameID(){
+        return frame_id;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

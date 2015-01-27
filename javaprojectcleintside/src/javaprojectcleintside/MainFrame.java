@@ -229,7 +229,10 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
 
              chat_Button.addActionListener(new ActionListener() {//remove
                 public void actionPerformed(ActionEvent e) {
-                   Chat newchat=new Chat();
+                    StartChat newchat=new StartChat(cleint,controller);
+                    newchat.setVisible(true);
+                    newchat.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                   //Chat newchat=new Chat();
                 }
             });
 

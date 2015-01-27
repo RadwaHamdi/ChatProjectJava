@@ -7,6 +7,7 @@ package common;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 /**
  *
@@ -14,5 +15,6 @@ import java.rmi.RemoteException;
  */
 public interface CleintModelInterface extends Remote {
     public String printHellofromcleint() throws RemoteException;
+    public void openChatWindow(ArrayList<String> chatMembers,int chat_ID) throws RemoteException;
 
 }
