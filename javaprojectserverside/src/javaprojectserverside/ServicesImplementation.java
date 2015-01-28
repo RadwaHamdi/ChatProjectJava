@@ -35,7 +35,7 @@ public class ServicesImplementation extends UnicastRemoteObject implements Servi
         cleints.add(newcleint);
         online_users.add(user_email);
         cleints_with_email.put(user_email, newcleint);
-       
+        System.out.println(online_users);
         try{
             System.out.println("hello there is anew cleint registerded");
         }catch(Exception e){
@@ -60,14 +60,17 @@ public class ServicesImplementation extends UnicastRemoteObject implements Servi
        
         receiverEmails.add(user_email);
         Collections.sort(receiverEmails);
-        ArrayList<String> temp;
+        ArrayList<String> temp=new ArrayList<String>();
         boolean check=false;
+        System.out.println(receiverEmails);
+        System.out.println(temp);
+       
         //ArrayList<String> sessions_memebers = new ArrayList<String>();
         for (int i = 0; i < receiverEmails.size(); i++) {
             for (int j = 0; j < online_users.size(); j++) {
                 if(online_users.get(j).equals(receiverEmails.get(i))){
                     check=true;
-                    break;
+                    //break;
                 }
             }
             if(check==false){
@@ -75,21 +78,41 @@ public class ServicesImplementation extends UnicastRemoteObject implements Servi
             }
         }
          for(int i=0;i<Server.sessions_ids.size();i++){
-             temp=Server.sessions_ids.get(i+1);
+             temp=Server.sessions_ids.get(i);
+             System.out.println("temp is:"+temp);
              if(temp.equals(receiverEmails)){
                  return  -1;
                  
              }
         }
         for(int i=0;i<receiverEmails.size();i++){
-            int j=0;
+            int j;
             for (j = 0; j <online_users.size(); j++) {
                 if(online_users.get(j).equals(receiverEmails.get(i))){
+                   System.out.println("openchatwindow");
                     cleints_with_email.get(receiverEmails.get(i)).openChatWindow(receiverEmails, Server.counter);
+                    System.out.println(receiverEmails.get(i));
                 }
             }
         }
+       
+        Server.sessions_ids.put(Server.counter,receiverEmails);
+        System.out.println(Server.sessions_ids.toString());
+        System.out.println("counter is:" +Server.counter);
         return Server.counter++;
+    }
+
+    public void sendMessagetoserver(String message, int chat_id) throws RemoteException {
+        ArrayList<String> message_receivers=Server.sessions_ids.get(chat_id);
+        for(int i=0;i<message_receivers.size();i++){
+            CleintModelInterface receiver=cleints_with_email.get(message_receivers.get(i));
+            receiver.receiveMessageFromServer(message, chat_id);
+        }
+        
+    }
+
+    public void closechatsession(int chat_id){
+        Server.sessions_ids.replace(chat_id,new ArrayList<String>());
     }
 
     

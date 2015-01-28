@@ -22,4 +22,6 @@ public interface ServicesInterface extends Remote{
     public Vector<user> retreiveContactList(user u)throws RemoteException;
     public int setStatusServer(String Email,int status) throws RemoteException;
     public int startNewChatSessionstr(String user_email,ArrayList<String> receiverEmails)throws RemoteException;
+    public void sendMessagetoserver(String message,int chat_id) throws RemoteException;
+    public void closechatsession(int chat_id)throws RemoteException;
 }

@@ -23,11 +23,15 @@ public class Controller implements Serializable {
     CleintModelInterface model;
     CleintVeiwInterface veiw;
     Vector<user> contactlist;
+    Vector<Chat> chats=new Vector<Chat>();
     ServicesInterface  obj;
     user newcleint;
+    
+    
     HashMap<Integer, ArrayList<String>> sessions;
  
-    public Controller ()throws RemoteException{
+    public Controller (user newuser)throws RemoteException{
+        
         model=new CleintModelInterfaceImplementation(this);
         sessions=new HashMap<Integer, ArrayList<String>>();
          try {
@@ -35,9 +39,13 @@ public class Controller implements Serializable {
              
              Registry reg = LocateRegistry.getRegistry("127.0.0.1", 5005);
               obj = (ServicesInterface) reg.lookup("chatservice");
-              newcleint=new user();
-              newcleint.setEmail("Radwa@gmail.com");
-              newcleint.setUserName("Radwa Hamdi");
+              newcleint=newuser;
+              
+              newcleint.setEmail(newuser.getEmail());
+              newcleint.setUserName(newuser.getUserName());
+              System.out.println(newuser.getEmail());
+              System.out.println(newuser.getUserName());
+               
               obj.registerCleint(new CleintModelInterfaceImplementation(this),newcleint.getEmail());
               obj.printHellofromserver();
               
@@ -70,16 +78,19 @@ public class Controller implements Serializable {
                System.exit(0);
         }
     }
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         
         try{
-        Controller c=new Controller();
+        //Controller c=new Controller();
+    
+        
+        
         
         }catch(Exception e){
             e.printStackTrace();
         }
 
-    }
+    }*/
     public int setStatus(String email,int status){
         int inserted=0;
         try{
@@ -92,18 +103,50 @@ public class Controller implements Serializable {
     public  void openchatwindows_controller(ArrayList<String> chatMembers, int chat_ID) {
         sessions.put(chat_ID, chatMembers);
         //remeber to add chatmembers in GUI of chat frame :)
-        Chat newchatwindow=new Chat();
+        Chat newchatwindow=new Chat(this);
         newchatwindow.setFrameID(chat_ID);
+        chats.add(newchatwindow);
         
     }
     public void start_chat_session(ArrayList<String> members){
         try{
     int check=obj.startNewChatSessionstr(newcleint.getEmail(), members);
     if(check==-1){
-        JOptionPane.showMessageDialog(null, "Sorry,you canot start this session");
+        JOptionPane.showMessageDialog(null, "Sorry,you canot start this chat  session");
     }
+    
         }catch(Exception e){
             e.printStackTrace();
         }
     }
+    public void sendMessageToServerSide(String message,int chat_id){
+        try{
+        obj.sendMessagetoserver(newcleint.getUserName()+" : "+message, chat_id);
+        
+       }catch(Exception ex){
+            ex.printStackTrace();
+       }
+        
+    }
+    public void displaymessage(String message,int chat_id){
+        for(int i=0;i<chats.size();i++){
+            if(chat_id==chats.get(i).getFrameID()){
+                chats.get(i).displaymessageontextarea(message);
+            }
+        }
+    }
+    public void closechatsession(int chat_id){
+        for(int i=0;i<chats.size();i++){
+            if(chats.get(i).getFrameID()==chat_id){
+                chats.remove(i);
+                break;
+            }
+        }
+        try{
+        obj.closechatsession(chat_id);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+    
 }

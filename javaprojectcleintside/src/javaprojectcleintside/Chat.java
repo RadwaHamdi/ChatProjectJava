@@ -43,6 +43,7 @@ import javax.swing.text.html.ImageView;
  */
 public class Chat extends javax.swing.JFrame {
     int frame_id;
+    Controller controller;
     
     class RoundedBorder implements Border {
         int radius;
@@ -62,10 +63,10 @@ public class Chat extends javax.swing.JFrame {
     
 
     /** Creates new form Chat */
-    public Chat() {
+    public Chat(Controller c) {
         try {
             initComponents();
-            
+            controller=c;
             Color myColor= new Color(0,141,183);
             jPanel1.setBackground(myColor);
             //setContentPane(new JLabel(new ImageIcon("background.jpg")));
@@ -82,6 +83,30 @@ public class Chat extends javax.swing.JFrame {
             jButton2.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("add_.jpg"))));
             setVisible(true);
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            addWindowListener(new WindowListener() {
+
+                public void windowOpened(WindowEvent e) {
+                }
+
+                public void windowClosing(WindowEvent e) {
+                    controller.closechatsession(frame_id);
+                }
+
+                public void windowClosed(WindowEvent e) {
+                }
+
+                public void windowIconified(WindowEvent e) {
+                }
+
+                public void windowDeiconified(WindowEvent e) {
+                }
+
+                public void windowActivated(WindowEvent e) {
+                }
+
+                public void windowDeactivated(WindowEvent e) {
+                }
+            });
 
     //Set the icon/graphic for the ToolBar Buttons.
             
@@ -124,6 +149,11 @@ public class Chat extends javax.swing.JFrame {
         jTextField1.setText("jTextField1");
 
         jButton1.setText("Send");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -143,7 +173,7 @@ public class Chat extends javax.swing.JFrame {
                         .addGap(183, 183, 183)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(26, 26, 26))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,7 +181,7 @@ public class Chat extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,11 +204,16 @@ public class Chat extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       
+       controller.sendMessageToServerSide(jTextField1.getText(), frame_id);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -197,6 +232,10 @@ public class Chat extends javax.swing.JFrame {
     }
     public int getFrameID(){
         return frame_id;
+    }
+    public  void displaymessageontextarea(String message){
+        String oldmessage=jTextArea1.getText();
+        jTextArea1.setText(oldmessage+"\n"+message);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

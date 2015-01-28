@@ -27,4 +27,8 @@ public class CleintModelInterfaceImplementation extends UnicastRemoteObject impl
         
     }
 
+    public void receiveMessageFromServer(String message, int chat_id){
+        controller.displaymessage(message, chat_id);
+    }
+
 }
