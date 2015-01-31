@@ -17,5 +17,7 @@ public interface CleintModelInterface extends Remote {
     public String printHellofromcleint() throws RemoteException;
     public void openChatWindow(ArrayList<String> chatMembers,int chat_ID) throws RemoteException;
     public void receiveMessageFromServer(String message,int chat_id)throws RemoteException;
-
+    public void tellCleintServerIsOff()throws RemoteException;
+    public  void tellCleintServerIsOn() throws RemoteException;
+    public  void setServerState() throws RemoteException;
 }

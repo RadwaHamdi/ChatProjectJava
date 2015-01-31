@@ -2,16 +2,21 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package javaprojectcleintside;
+
 import common.*;
 import java.io.Serializable;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import org.omg.CORBA.MARSHAL;
 
@@ -20,133 +25,376 @@ import org.omg.CORBA.MARSHAL;
  * @author Alaa
  */
 public class Controller implements Serializable {
+
     CleintModelInterface model;
     CleintVeiwInterface veiw;
+    MainFrame veiwRef;
     Vector<user> contactlist;
-    Vector<Chat> chats=new Vector<Chat>();
-    ServicesInterface  obj;
+    Vector<Chat> chats = new Vector<Chat>();
+    ServicesInterface obj;
     user newcleint;
+    SignIn signInView;
+    SignUp signUpView;
+    Registry reg;
+    boolean serverstate=true;
     
-    
+    CleintModelInterfaceImplementation userref;
+
     HashMap<Integer, ArrayList<String>> sessions;
- 
-    public Controller (user newuser)throws RemoteException{
-        
-        model=new CleintModelInterfaceImplementation(this);
-        sessions=new HashMap<Integer, ArrayList<String>>();
-         try {
-             
-             
-             Registry reg = LocateRegistry.getRegistry("127.0.0.1", 5005);
-              obj = (ServicesInterface) reg.lookup("chatservice");
-              newcleint=newuser;
-              
-              newcleint.setEmail(newuser.getEmail());
-              newcleint.setUserName(newuser.getUserName());
-              System.out.println(newuser.getEmail());
-              System.out.println(newuser.getUserName());
-               
-              obj.registerCleint(new CleintModelInterfaceImplementation(this),newcleint.getEmail());
-              obj.printHellofromserver();
-              
-              //note the info of the user should be set from the log in method 
-              //or we should here select by the user_email which user entered in login and select all info about this user from
-              //database and set all info of this user here using setters
-              
-              contactlist=obj.retreiveContactList(newcleint);
-              veiw=new MainFrame(this, contactlist,newcleint);
-            //this should be removed this is just for testing logic
-          /*   for(int i=0;i<contactlist.size();i++){
-            System.out.print(contactlist.get(i).getFirstName()+":");
-            System.out.print(contactlist.get(i).getLastName()+":");
-            System.out.print(contactlist.get(i).getUserName()+":");
-            System.out.print(contactlist.get(i).getEmail()+":");
-            System.out.print(contactlist.get(i).getBirthDate()+":");
-            System.out.print(contactlist.get(i).getStatus()+":");
-            System.out.print(contactlist.get(i).getPassward()+":");
-            System.out.println("");
-             }
-             //
-              
-            */
-             
 
+    public Controller() throws RemoteException {
+        signInView = new SignIn(this);
+        model = new CleintModelInterfaceImplementation(this);
+        sessions = new HashMap<Integer, ArrayList<String>>();
 
-        
+        try {
+
+            reg = LocateRegistry.getRegistry("127.0.0.1", 5005);
+            obj = (ServicesInterface) reg.lookup("chatservice");
+            serverstate=obj.checkServerState();
+
         } catch (Exception ex) {
-              JOptionPane.showMessageDialog(null, "Server is off");
-               System.exit(0);
+            JOptionPane.showMessageDialog(null, "Server is off");
+            System.exit(0);
         }
     }
-    /*public static void main(String[] args) {
+
+ 
+    public void signInClientSide() {
+         int validate=0;
+            if(validateEmailSignIn(signInView.getEmailTextField().getText())==-1){
+                validate=-1;
+            }
+            if(validateEmptyFieldsSignIn(signInView.getEmailTextField().getText(),signInView.getPasswordTextField().getText())==-1){
+                validate=-1;
+            }
+            if(validate==0){
+        try {
+            user newUser;
+           
+           
+            if(serverstate==true){
+                
+            newUser = obj.signInServerSide(signInView.getEmailTextField().getText(), signInView.getPasswordTextField().getText());         
+           if(newUser.getEmail()==null||newUser==null){
+            JOptionPane.showMessageDialog(null,"Sorry Server is off");
+            signInView.dispose();
+           }
+           else{
+            singInHandling(newUser);
+           }
+            }
+            else{
+            JOptionPane.showMessageDialog(null,"Sorry Server is off");
+            signInView.dispose();
+            }
+        } catch (RemoteException ex) {
+            JOptionPane.showMessageDialog(null,"Sorry Server is off");
+            signInView.dispose();
+        }
+            }
+    }
+
+    public void singInHandling(user u) {
+
+        if (u != null) {
+            try {
+                JOptionPane.showMessageDialog(signInView, "sign in successfully");
+                signInView.dispose();
+                veiwRef = new MainFrame(this, obj.retreiveContactList(u), u);
+                veiw=veiwRef;
+                newcleint=u;
+                userref=new CleintModelInterfaceImplementation(this);
+                obj.registerCleint(userref,u.getEmail());
+            } catch (RemoteException ex) {
+                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                 JOptionPane.showMessageDialog(signInView, "user doesn't exist");
+            }
+
+        } else {
+
+            JOptionPane.showMessageDialog(signInView, "sign in failed");
+
+        }
+    }
+
+    public void signUpClientSide(SignUp ref) {
+        signUpView = ref;
         
-        try{
-        //Controller c=new Controller();
-    
-        
-        
-        
-        }catch(Exception e){
+        newcleint = new user();
+        newcleint.setEmail(signUpView.getEmailTextField().getText());
+        newcleint.setUserName(signUpView.getUserNameTextField().getText());
+        newcleint.setPassward(signUpView.getPasswordTextField().getText());
+        newcleint.setFirstName(signUpView.getFirstNameTextFeild().getText());
+        newcleint.setLastName(signUpView.getLastNameTextField().getText());
+        //
+        System.out.println(signUpView.getEmailTextField().getText());
+       int check_email= validateEmail(signUpView.getEmailTextField().getText());
+       int check_empty=validateEmptyFields(signUpView.getFirstNameTextFeild().getText(),signUpView.getLastNameTextField().getText(),signUpView.getUserNameTextField().getText(), signUpView.getEmailTextField().getText(),signUpView.getPasswordTextField().getText(),signUpView.getRepasswordTextField().getText() );
+       int check_password=validateRepassword(signUpView.getPasswordTextField().getText(), signUpView.getRepasswordTextField().getText());
+       int final_check=0;
+       
+       if(check_empty==-1){
+           
+       final_check=-1;
+       }
+       if(check_email==-1)
+       {
+           final_check=-1;
+                   }
+       if(check_password==-1){
+           final_check=-1;
+       }
+       if(final_check==0){ 
+       try {
+            boolean check=obj.checkServerState();
+            if(serverstate==true){
+            System.out.println(serverstate);
+            int inserted=obj.insertUserData(newcleint);    
+            if(inserted==0){
+            veiwRef = new MainFrame(this, obj.retreiveContactList(newcleint), newcleint);
+            userref=new CleintModelInterfaceImplementation(this);
+            obj.registerCleint(userref,newcleint.getEmail());
+            }
+            else{
+                    JOptionPane.showMessageDialog(null,"Sorry this user is already registered");
+             }
+            signUpView.dispose();
+            
+            
+           
+            
+            }
+            else{
+            JOptionPane.showMessageDialog(null,"Sorry Server is off");
+            signUpView.dispose();
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       }
+       
+    }
+
+    public static void main(String[] args) {
+
+        try {
+            Controller c = new Controller();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-    }*/
-    public int setStatus(String email,int status){
-        int inserted=0;
-        try{
-               inserted=obj.setStatusServer(email, status);
-        }catch(Exception e){
+    }
+
+    public int setStatus(String email, int status) {
+        int inserted = 0;
+        try {
+            if(serverstate==true){
+            inserted = obj.setStatusServer(email, status);
+            }
+            else{
+            JOptionPane.showMessageDialog(null,"Sorry Server is off");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return inserted;
     }
-    public  void openchatwindows_controller(ArrayList<String> chatMembers, int chat_ID) {
+
+    public void openchatwindows_controller(ArrayList<String> chatMembers, int chat_ID) {
         sessions.put(chat_ID, chatMembers);
         //remeber to add chatmembers in GUI of chat frame :)
-        Chat newchatwindow=new Chat(this);
+        Chat newchatwindow = new Chat(this);
         newchatwindow.setFrameID(chat_ID);
         chats.add(newchatwindow);
-        
+
     }
-    public void start_chat_session(ArrayList<String> members){
-        try{
-    int check=obj.startNewChatSessionstr(newcleint.getEmail(), members);
-    if(check==-1){
-        JOptionPane.showMessageDialog(null, "Sorry,you canot start this chat  session");
-    }
-    
-        }catch(Exception e){
+
+    public void start_chat_session(ArrayList<String> members) {
+        try {
+            if(serverstate==true){
+            int check = obj.startNewChatSessionstr(newcleint.getEmail(), members);
+            
+            if (check == -1) {
+                JOptionPane.showMessageDialog(null, "Sorry,you canot start this chat  session");
+            }
+            }
+            else{
+            JOptionPane.showMessageDialog(null,"Sorry Server is off");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public void sendMessageToServerSide(String message,int chat_id){
-        try{
-        obj.sendMessagetoserver(newcleint.getUserName()+" : "+message, chat_id);
-        
-       }catch(Exception ex){
+
+    public void sendMessageToServerSide(String message, int chat_id) {
+        try {
+            
+            if(serverstate==true){
+            obj.sendMessagetoserver(newcleint.getUserName() + " : " + message, chat_id);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null,"Sorry Server is off");
+            }
+
+        } catch (Exception ex) {
             ex.printStackTrace();
-       }
-        
+            //JOptionPane.showMessageDialog(null,"Sorry Server is off");
+            
+        }
+
     }
-    public void displaymessage(String message,int chat_id){
-        for(int i=0;i<chats.size();i++){
-            if(chat_id==chats.get(i).getFrameID()){
+
+    public void displaymessage(String message, int chat_id) {
+        for (int i = 0; i < chats.size(); i++) {
+            if (chat_id == chats.get(i).getFrameID()) {
                 chats.get(i).displaymessageontextarea(message);
             }
         }
     }
-    public void closechatsession(int chat_id){
-        for(int i=0;i<chats.size();i++){
-            if(chats.get(i).getFrameID()==chat_id){
+
+    public void closechatsession(int chat_id) {
+        for (int i = 0; i < chats.size(); i++) {
+            if (chats.get(i).getFrameID() == chat_id) {
                 chats.remove(i);
                 break;
             }
         }
-        try{
-        obj.closechatsession(chat_id);
-        }catch(Exception ex){
-            ex.printStackTrace();
+        try {
+            obj.closechatsession(chat_id);
+        } catch (Exception ex) {
+            //JOptionPane.showMessageDialog(null, "Sorry server is off");
+            chats.get(chat_id).dispose();
         }
     }
+    public  void unRegisterCleint(){
+        try {
+            if(serverstate==true){
+            obj.unRegisterCleintServerSide(newcleint,userref);
+            }
+            
+        } catch (RemoteException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void signOutCleintSide(){
+        try {
+            if(serverstate==true){
+            obj.unRegisterCleintServerSide(newcleint, userref);
+             veiwRef.dispose();
+            SignIn logInAgain=new SignIn(this);
+            signInView=logInAgain;
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Sorry server is off");
+            }
+           
+            //signInClientSide();
+            
+        } catch (RemoteException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    } 
+    public void TellCleint_ServerIsOff(){
+       serverstate=false;
+       
+    }
+    public void TellCleint_ServerIson() {
+       serverstate=true;
+       
+    }
+    
+    
+    
+     public int validateEmail(String emailTextField){
+         
+        //String email= "Mm.9mS_s@nlicom.C_w";//put here emailTextField instead
+        Pattern emailPattern = Pattern.compile("[a-z0-9._-]+@[a-z0-9.-]+\\.[a-z]{2,4}+");
+        Matcher match = emailPattern.matcher(emailTextField.toLowerCase());
+        boolean b= match.matches();
+        System.out.println(b);
+        if(b==false){
+            signUpView.dialog("Please enter a valid email");
+            return -1;
+        }
+        else{
+            return 0;
+        }
+    }
+    public int validateEmptyFields(String firstNameTextField,String lastNameTextField,String userNameTextField,String passwordTextField,String repasswordTextField,String emailTextField){
+        int check=0;
+        
+        if(firstNameTextField.equals("")){
+            
+            signUpView.dialog("Please enter your first name");
+            check=-1;
+        }
+        if(lastNameTextField.equals("")){
+           signUpView.dialog("Please enter your last name");
+           check=-1;
+        }
+        if(userNameTextField.equals("")){
+            signUpView.dialog("Please enter your user name");
+            check=-1;
+        }
+        if(passwordTextField.equals("")){
+           signUpView.dialog("Please enter your password");
+           check=-1;
+        }
+        if(repasswordTextField.equals("")){
+            signUpView.dialog("Please enter your password again");
+            check=-1;
+        }
+        if(emailTextField.equals("")){
+            signUpView.dialog("Please enter your email");
+            check=-1;
+        }
+        return  check;
+    }
+    public int validateRepassword(String passwordTextField,String repasswordTextField){
+        if(!repasswordTextField.equalsIgnoreCase(passwordTextField)){
+            signUpView.dialog("Please enter your password correctly");
+            return -1;
+        }
+        else{
+        return  0;
+        }
+    }
+    
+    
+    public int validateEmptyFieldsSignIn(String Email,String password){
+        int check=0;
+        
+        if(Email.equals("")){
+            
+            signInView.dialog("Please enter your email");
+            check=-1;
+        }
+        if(password.equals("")){
+           signInView.dialog("Please enter your passward");
+           check=-1;
+        }
+      
+       
+        return  check;
+    }
+    public int validateEmailSignIn(String emailTextField){
+         
+        //String email= "Mm.9mS_s@nlicom.C_w";//put here emailTextField instead
+        Pattern emailPattern = Pattern.compile("[a-z0-9._-]+@[a-z0-9.-]+\\.[a-z]{2,4}+");
+        Matcher match = emailPattern.matcher(emailTextField.toLowerCase());
+        boolean b= match.matches();
+        System.out.println(b);
+        if(b==false){
+            signInView.dialog("Please enter a valid email");
+            return -1;
+        }
+        else{
+            return 0;
+        }
+    }
+    
     
 }

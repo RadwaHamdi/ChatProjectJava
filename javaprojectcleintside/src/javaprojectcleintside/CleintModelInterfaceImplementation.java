@@ -31,4 +31,17 @@ public class CleintModelInterfaceImplementation extends UnicastRemoteObject impl
         controller.displaymessage(message, chat_id);
     }
 
+    public void tellCleintServerIsOff() {
+        controller.TellCleint_ServerIsOff();
+        
+        
+    }
+    public  void tellCleintServerIsOn() {
+    controller.TellCleint_ServerIson();
+    }
+
+    public void setServerState() throws RemoteException {
+        controller.serverstate=true;
+    }
+
 }

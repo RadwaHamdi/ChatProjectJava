@@ -24,4 +24,8 @@ public interface ServicesInterface extends Remote{
     public int startNewChatSessionstr(String user_email,ArrayList<String> receiverEmails)throws RemoteException;
     public void sendMessagetoserver(String message,int chat_id) throws RemoteException;
     public void closechatsession(int chat_id)throws RemoteException;
+    public int insertUserData(user u) throws RemoteException;
+    public user signInServerSide(String email, String password)throws RemoteException;
+    public void unRegisterCleintServerSide(user oldUser,CleintModelInterface userRef)throws RemoteException;
+    public boolean checkServerState()throws RemoteException;
 }

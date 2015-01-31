@@ -26,8 +26,8 @@ public class user implements Serializable{
     public void setFirstName(String firstname){
         this.firstname=firstname;
     }
-    public void setLastName(String Lastname){
-        this.lastname=lastname;
+    public void setLastName(String L){
+        this.lastname=L;
     }
     public void setUserName(String username){
         this.username=username;

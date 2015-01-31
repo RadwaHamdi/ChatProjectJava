@@ -30,7 +30,7 @@ public class login extends javax.swing.JFrame {
                     newuser.setEmail(jTextField1.getText());
                     newuser.setUserName(jTextField2.getText());
                     
-                    Controller newcleint=new Controller(newuser);
+//                    Controller newcleint=new Controller(newuser);
                     setVisible(false);
                 }catch(Exception ex){
                     ex.printStackTrace();

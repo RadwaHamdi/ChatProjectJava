@@ -49,8 +49,12 @@ import javax.swing.event.MenuListener;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 import common.CleintVeiwInterface;
 import common.user;
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.event.MouseInputListener;
 /**
  *
@@ -188,6 +192,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
              add("East",east_panel);
              JPanel south_panel=new JPanel();
              south_panel.setBackground(new Color(0,107,172));//radwa
+             south_panel.add(new JLabel("here there will new advertisment"));
              add("South",south_panel);
 
              names.addMouseListener(new MouseInputListener() {
@@ -247,7 +252,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
 
             sign_out_Button.addActionListener(new ActionListener() {//remove
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("sign_out");
+                   controller.signOutCleintSide();
                 }
             });
             search_user_Button.addActionListener(new ActionListener() {
@@ -292,6 +297,30 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
 
 
         setVisible(true);
+        addWindowListener(new WindowListener() {
+
+            public void windowOpened(WindowEvent e) {
+            }
+
+            public void windowClosing(WindowEvent e) {
+                controller.unRegisterCleint();
+            }
+
+            public void windowClosed(WindowEvent e) {
+            }
+
+            public void windowIconified(WindowEvent e) {
+            }
+
+            public void windowDeiconified(WindowEvent e) {
+            }
+
+            public void windowActivated(WindowEvent e) {
+            }
+
+            public void windowDeactivated(WindowEvent e) {
+            }
+        });
         
 
     }
@@ -337,5 +366,9 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
     public void setstatus(String user_email,int status){
         controller.setStatus(user_email, status);
     }
+    public void TellServerIsOff(){
+    JOptionPane.showMessageDialog(null, "Server is Off");
+    }
+    
    
 }
