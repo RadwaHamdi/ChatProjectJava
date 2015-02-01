@@ -142,4 +142,76 @@ public class DatabaseConnection {
         }
         return u;
     }
+    public static int insertFriendRequests(String userEmail, String receiverEmail) {
+        /**
+         *
+         * This method may return one of three values 0 => means it succeeded to
+         * send request 1=> means that the user entered a wrong email 2=> means
+         * that the user has already sent a request to the receiver
+         */
+        int flag = 0;
+        Connection cn=null;
+        try {
+              cn = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
+
+            ResultSet rs = cn.createStatement().executeQuery("select * from friend_requests where email = '" + receiverEmail + "' and request_sender = '" + userEmail + "'");
+            rs.next();
+            rs.getString(1);
+            rs.getString(2);
+            flag = 2;
+
+        } catch (SQLException ex) {
+
+            try {
+                ResultSet rs = cn.createStatement().executeQuery("select * from user where email = '" + receiverEmail + "'");
+
+                rs.next();
+                rs.getString(1);
+                rs.getString(2);
+                rs.getString(3);
+                rs.getString(4);
+
+                PreparedStatement insertStmt = cn.prepareStatement("insert into friend_requests (email, request_sender) values(?,?)");
+                insertStmt.setString(1, receiverEmail);
+                insertStmt.setString(2, userEmail);
+                insertStmt.execute();
+                flag = 0;
+                cn.close();
+
+            } catch (SQLException e) {
+
+                flag = 1;
+            }
+
+        }
+        
+        return flag;
+
+    }
+    
+    
+    
+    public static int deleteFromContact(String userEmail, String receiverEmail) {
+        int flag = 2;
+         Connection cn=null;
+        try {
+            cn = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
+            PreparedStatement deleteStmt = cn.prepareStatement("delete from contacts (user_email, request_sender) values(?,?)");
+            deleteStmt.setString(1, userEmail);
+            deleteStmt.setString(2, receiverEmail);
+            deleteStmt.execute();
+            PreparedStatement deleteStmt2 = cn.prepareStatement("delete from contacts (user_email, request_sender) values(?,?)");
+            deleteStmt2.setString(1, receiverEmail);
+            deleteStmt2.setString(2, userEmail);
+
+            deleteStmt2.execute();
+            flag = 0;
+        } catch (SQLException ex) {
+
+            flag = 1;
+        }
+        return flag;
+    }
+
+
 }

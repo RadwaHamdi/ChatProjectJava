@@ -50,11 +50,16 @@ import javax.swing.plaf.basic.BasicComboBoxEditor;
 import common.CleintVeiwInterface;
 import common.user;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.MouseInputListener;
 /**
  *
@@ -64,6 +69,9 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
     Controller controller;
     Vector<user> contactlist;
     user cleint;
+    JPanel south_panel;
+    boolean check_first;
+    
     public MainFrame(Controller c,Vector<user> contact_list,user current_user)  {
         
         try{
@@ -190,9 +198,10 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
              JPanel east_panel=new JPanel();
              east_panel.setBackground(new Color(0,107,172));
              add("East",east_panel);
-             JPanel south_panel=new JPanel();
+             south_panel=new JPanel();
              south_panel.setBackground(new Color(0,107,172));//radwa
-             south_panel.add(new JLabel("here there will new advertisment"));
+             check_first=true;
+             //south_panel.add(new JLabel("here there will new advertisment"));
              add("South",south_panel);
 
              names.addMouseListener(new MouseInputListener() {
@@ -222,7 +231,8 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
 
               add_contact_Button.addActionListener(new ActionListener() {//remove
                 public void actionPerformed(ActionEvent e) {
-                    addFriend newfreind=new addFriend();
+                    AddFriendFrame addFriend = new AddFriendFrame(new Point(100, 100),controller,cleint);
+                    
                 }
             });
 
@@ -245,7 +255,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
 
              remove_user_Button.addActionListener(new ActionListener() {//remove
                 public void actionPerformed(ActionEvent e) {
-                   RemoveFriend freind=new RemoveFriend();
+                  // RemoveFriend freind=new RemoveFriend();
                 }
             });
 
@@ -370,5 +380,29 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
     JOptionPane.showMessageDialog(null, "Server is Off");
     }
     
+   public void showAdvertisement(String FilePath){
+        try {
+            BufferedImage image=ImageIO.read(new File(FilePath));
+            //Image advertisment = ImageIO.read(getClass().getResource(FilePath));
+            JLabel l=new  JLabel(new ImageIcon(image));
+           
+               
+               
+               remove(south_panel);
+               south_panel=new JPanel();
+               south_panel.setMaximumSize(new Dimension(50,50));
+               south_panel.setBackground(new Color(0,107,172));
+               south_panel.add(l);   
+               
+               add("South",south_panel);
+               this.revalidate();
+           
+           
+            
+        } catch (IOException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
    
+   
+   }
 }

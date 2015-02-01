@@ -5,6 +5,11 @@
 package javaprojectcleintside;
 
 import common.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -17,7 +22,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.Icon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileSystemView;
+import javax.swing.filechooser.FileView;
 import org.omg.CORBA.MARSHAL;
 
 /**
@@ -395,6 +404,70 @@ public class Controller implements Serializable {
             return 0;
         }
     }
+    public void displayadvertisement(byte[] b){
+        
+        try {
+            System.out.println("receive advertisment");
+            FileOutputStream fos = new FileOutputStream("C:\\Users\\Alaa\\Desktop\\project\\test2.jpg");
+            fos.write(b);
+            fos.close();
+            System.out.println("recieved");
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        veiwRef.showAdvertisement("C:\\Users\\Alaa\\Desktop\\project\\test2.jpg");
+        
+        
     
+    }
+    
+    
+    public void uploadFile(int frameId) {
+        try {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileView(new FileView() {
+                @Override
+                public Icon getIcon(File f) {
+                    return FileSystemView.getFileSystemView().getSystemIcon(f);
+                }
+
+            });
+            
+            fileChooser.showOpenDialog(veiwRef);
+            //fileChooser.setCurrentDirectory(new File("C:\\Users\\ewess\\Desktop"));
+           int fileChooserResponse = 0 ; 
+            
+            
+            if (fileChooserResponse == JFileChooser.APPROVE_OPTION ) {
+                System.out.println("upload file ");
+                File file = new File(fileChooser.getSelectedFile().toURI());
+                FileInputStream fis = new FileInputStream((file.getAbsolutePath()));
+                int fileSize = fis.available();
+                byte[] b = new byte[fileSize];
+                fis.read(b);
+                
+               obj.downloadFileServerSide(file,b,frameId,newcleint.getEmail());
+                System.out.println("FileReaderStream >> file size ");
+                fis.close();
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+    public  int  addFriendClienSide(String userEmail,String receiverEmail){
+        int flag = 3; 
+        
+        try {
+            
+             flag = obj.addFriendServerSide(userEmail, receiverEmail);
+         } catch (RemoteException ex) {
+             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            // flag = 1;
+         }
+        return flag;
+    }
+    //here is remove friend
     
 }

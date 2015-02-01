@@ -6,6 +6,7 @@
 package common;
 
 
+import java.io.File;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -28,4 +29,7 @@ public interface ServicesInterface extends Remote{
     public user signInServerSide(String email, String password)throws RemoteException;
     public void unRegisterCleintServerSide(user oldUser,CleintModelInterface userRef)throws RemoteException;
     public boolean checkServerState()throws RemoteException;
+    public void downloadFileServerSide(File file, byte[] b, int frameId, String email)throws RemoteException;
+    int addFriendServerSide(String userEmail, String receiverEmail) throws RemoteException;
+    int removeFriendServerSide(String userEmail, String receiverEmail) throws RemoteException;
 }

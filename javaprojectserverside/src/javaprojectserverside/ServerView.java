@@ -5,6 +5,10 @@
  */
 package javaprojectserverside;
 
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Alaa
@@ -57,6 +61,11 @@ public class ServerView extends javax.swing.JFrame {
         offline_users.setText("Offline Users");
 
         send_adverisements.setText("Send Advertizements");
+        send_adverisements.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                send_adverisementsActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -104,6 +113,15 @@ public class ServerView extends javax.swing.JFrame {
        
         controller.stopServer();
     }//GEN-LAST:event_StopActionPerformed
+
+    private void send_adverisementsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_send_adverisementsActionPerformed
+      
+        try {
+            controller.sendAdvertise();
+        } catch (RemoteException ex) {
+            Logger.getLogger(ServerView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_send_adverisementsActionPerformed
 
     /**
      * @param args the command line arguments

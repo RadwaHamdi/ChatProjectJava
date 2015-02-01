@@ -9,6 +9,10 @@ import common.CleintModelInterface;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -21,6 +25,7 @@ import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -161,6 +166,43 @@ public class ServerController  {
             Logger.getLogger(ServerController.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
+    
+    
+    
+     public void sendAdvertise() throws RemoteException{
+        try {
+            byte[] b;
+            System.out.println("send advertisment ");
+            JFileChooser fc = new JFileChooser();
+            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                FileInputStream fis = new FileInputStream(fc.getSelectedFile().getPath());
+               // int fileSize = fis.available();
+           // FileInputStream fis = new FileInputStream(new File("C:\\Users\\Alaa\\Desktop\\icons\\friend.jpg"));
+            int size=(int)(new File(fc.getSelectedFile().getPath()).length());
+            b=new byte[size];
+            fis.read(b);
+            
+            System.out.println("size="+size);    
+              
+                    System.out.println("before call...");
+                    onlineCleints=obj.getOnlineCleints();
+                    for (int i = 0; i <onlineCleints.size(); i++) {
+                        
+                        onlineCleints.get(i).receiveAdvertise(b);
+            }
+                    
+                    System.out.println("call recieveAdv...");
+         
+            System.out.println("after loop..."); 
+            //System.out.println("FileReaderStream >> file size ");
+            fis.close();
+            }    
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+}
+    
+    
     
 
 }
