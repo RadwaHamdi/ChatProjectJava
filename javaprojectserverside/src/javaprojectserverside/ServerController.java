@@ -6,6 +6,7 @@
 package javaprojectserverside;
 
 import common.CleintModelInterface;
+import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -44,10 +45,11 @@ public class ServerController  {
     Vector<CleintModelInterface> onlineCleints;
     CleintModelInterface first;
     public  ServerController(){
-        //view=new ServerView(this);
-        serverView = new ServerGUI(this);
+        view=new ServerView(this);
         
-        serverView.addWindowListener(new WindowListener() {
+       // serverView = new ServerGUI(this);
+        
+       view.addWindowListener(new WindowListener() {
 
             public void windowOpened(WindowEvent e) {
             }
@@ -66,7 +68,7 @@ public class ServerController  {
                      }
             }
                 
-             JOptionPane.showMessageDialog(serverView,"Server is stopped");
+             JOptionPane.showMessageDialog(view,"Server is stopped");
             serverRunning=false;
                 
             }
@@ -96,8 +98,9 @@ public class ServerController  {
         reg.rebind("chatservice", (Remote) obj);
         
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null,"Server is already runing");
-            serverView.dispose();
+            e.printStackTrace();
+          //  JOptionPane.showMessageDialog(null,"Server is already runing");
+           
         }
         
     }
@@ -129,14 +132,16 @@ public class ServerController  {
                       
                         serverRunning=true;
                         
-                        JOptionPane.showMessageDialog(serverView,"Server is started");
+                        JOptionPane.showMessageDialog(view,"Server is started");
                         }
                         else{
-                        JOptionPane.showMessageDialog(serverView,"Server is already running");
+                        JOptionPane.showMessageDialog(view,"Server is already running");
+                       
                         }
      
 		}catch(RemoteException ex){
-			ex.printStackTrace();
+			 JOptionPane.showMessageDialog(view,"Server is already running");
+                        //serverView.dispose();;
 			}
                 
                 
@@ -159,15 +164,15 @@ public class ServerController  {
                  System.out.println("send to cleint "+i+" to  him serverstopped");
             }
                     
-             JOptionPane.showMessageDialog(serverView,"Server is stopped");
+             JOptionPane.showMessageDialog(view,"Server is stopped");
             serverRunning=false;
             }
             else{
-                JOptionPane.showMessageDialog(serverView, "Server is already not running");
+                JOptionPane.showMessageDialog(view, "Server is already not running");
             }
         } catch (RemoteException ex) {
-            Logger.getLogger(ServerController.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+            JOptionPane.showMessageDialog(view, "Server is already not running");
+        }
     }
     
     

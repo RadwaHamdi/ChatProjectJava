@@ -59,6 +59,7 @@ public class ServicesImplementation extends UnicastRemoteObject implements Servi
                 cleints.add(newcleint);
                 online_users.add(user_email);
                 cleints_with_email.put(user_email, newcleint);
+                DatabaseConnection.changeuserstatus(user_email,0);
                 System.out.println(online_users + "from register method");
                 System.out.println(cleints.size());
             }
@@ -94,6 +95,7 @@ public class ServicesImplementation extends UnicastRemoteObject implements Servi
             online_users.remove(oldUser.getEmail());
             cleints.remove(userRef);
             cleints_with_email.remove(oldUser.getEmail());
+            DatabaseConnection.changeuserstatus(oldUser.getEmail(),5);
             System.out.println(online_users + "gfrom inregister method");
 
         } else {

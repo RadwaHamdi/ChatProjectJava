@@ -152,8 +152,18 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
                 contacts.add(contactlist.get(i).getUserName());
             }
 
-            JList names = new JList(contacts);
+            final JList names = new JList(contacts);
             names.setCellRenderer(new customlist(contactlist));
+            Thread t=new Thread(new Runnable() {
+
+                public void run() {
+                    while(true){
+                    names.setCellRenderer(new customlist(controller.getContactList(cleint)));
+                    revalidate();
+                    }
+                }
+            });
+            t.start();
             JScrollPane contact_list_scrollpane = new JScrollPane(names);
             contact_list_scrollpane.setSize(300, 100);
             name.setBackground(new Color(0, 107, 172));

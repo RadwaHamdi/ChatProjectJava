@@ -5,6 +5,7 @@
  */
 package javaprojectserverside;
 
+import java.awt.Color;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +22,7 @@ public class ServerView extends javax.swing.JFrame {
     public ServerView(ServerController c) {
         initComponents();
         controller=c;
+        setBackground(Color.yellow);
         setVisible(true);
         
     }
@@ -37,10 +39,11 @@ public class ServerView extends javax.swing.JFrame {
         Start = new javax.swing.JButton();
         Stop = new javax.swing.JButton();
         online_users = new javax.swing.JButton();
-        offline_users = new javax.swing.JButton();
         send_adverisements = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(102, 153, 255));
 
         Start.setText("Start");
         Start.addActionListener(new java.awt.event.ActionListener() {
@@ -56,9 +59,12 @@ public class ServerView extends javax.swing.JFrame {
             }
         });
 
-        online_users.setText("Online Users");
-
-        offline_users.setText("Offline Users");
+        online_users.setText("User statistics");
+        online_users.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                online_usersActionPerformed(evt);
+            }
+        });
 
         send_adverisements.setText("Send Advertizements");
         send_adverisements.addActionListener(new java.awt.event.ActionListener() {
@@ -67,38 +73,42 @@ public class ServerView extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel1.setText("Server");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(44, 44, 44)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(send_adverisements)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Start)
-                            .addComponent(online_users))
-                        .addGap(30, 30, 30)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(offline_users)
-                            .addComponent(Stop))))
-                .addContainerGap(138, Short.MAX_VALUE))
+                        .addGap(134, 134, 134)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(send_adverisements)
+                            .addComponent(online_users, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+                            .addComponent(Stop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(Start, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(173, 173, 173)
+                        .addComponent(jLabel1)))
+                .addContainerGap(154, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(31, 31, 31)
+                .addComponent(Start)
+                .addGap(28, 28, 28)
+                .addComponent(Stop)
+                .addGap(30, 30, 30)
+                .addComponent(online_users)
                 .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Start)
-                    .addComponent(Stop))
-                .addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(online_users)
-                    .addComponent(offline_users))
-                .addGap(65, 65, 65)
                 .addComponent(send_adverisements)
-                .addContainerGap(103, Short.MAX_VALUE))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
 
         pack();
@@ -122,6 +132,10 @@ public class ServerView extends javax.swing.JFrame {
             Logger.getLogger(ServerView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_send_adverisementsActionPerformed
+
+    private void online_usersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_online_usersActionPerformed
+     ServerGUI serverView = new ServerGUI(controller);
+    }//GEN-LAST:event_online_usersActionPerformed
 
     /**
      * @param args the command line arguments
@@ -162,7 +176,7 @@ public class ServerView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Start;
     private javax.swing.JButton Stop;
-    private javax.swing.JButton offline_users;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JButton online_users;
     private javax.swing.JButton send_adverisements;
     // End of variables declaration//GEN-END:variables

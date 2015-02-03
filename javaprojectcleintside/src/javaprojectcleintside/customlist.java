@@ -106,7 +106,7 @@ public class customlist extends JPanel implements ListCellRenderer {
             }
 
                
-            
+            revalidate();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

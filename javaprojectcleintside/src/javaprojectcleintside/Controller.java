@@ -562,7 +562,8 @@ public class Controller implements Serializable {
         try {
        contacts=obj.retreiveContactList(myuser);
         } catch(Exception e){
-            e.printStackTrace();
+           JOptionPane.showMessageDialog(null,"Sorry server is off ");
+           System.exit(0);
         }
         return contacts;
     }

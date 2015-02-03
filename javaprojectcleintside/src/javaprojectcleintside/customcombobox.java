@@ -48,7 +48,7 @@ public class customcombobox extends JLabel implements ListCellRenderer {
      if(index==1){
         // if(value.equals("Offline")){
          try{
-         Image disconnected_Icon = ImageIO.read(getClass().getResource("disconnected.jpg"));
+         Image disconnected_Icon = ImageIO.read(getClass().getResource("away.jpg"));
          label.setIcon(new ImageIcon(disconnected_Icon));
              }catch(Exception e){
 
@@ -71,7 +71,7 @@ public class customcombobox extends JLabel implements ListCellRenderer {
       if(index==3){
         // if(value.equals("Offline")){
          try{
-         Image away_Icon = ImageIO.read(getClass().getResource("away.jpg"));
+         Image away_Icon = ImageIO.read(getClass().getResource("disconnected.jpg"));
          label.setIcon(new ImageIcon(away_Icon));
              }catch(Exception e){
 
