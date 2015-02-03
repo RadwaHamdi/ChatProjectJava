@@ -306,4 +306,12 @@ public class ServicesImplementation extends UnicastRemoteObject implements Servi
     public int acceptFriendServerSide(String userEmail, String receiverEmail)  {
         return DatabaseConnection.insertContact(userEmail, receiverEmail);
     }
+    public int denyFriendRequesServerSide(String userEmail, String receiverEmail){
+        return DatabaseConnection.deleteFriendRequest(userEmail, receiverEmail);
+    }
+
+    public user getUser(String userEmail) throws RemoteException {
+        return  DatabaseConnection.getUserDate(userEmail);
+    }
+            
 }

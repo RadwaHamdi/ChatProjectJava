@@ -341,4 +341,28 @@ public class DatabaseConnection {
         }
         return flag;
     }
+  public static int deleteFriendRequest(String userEmail, String receiverEmail) {
+        /**
+         * returns => 0 removed him from friend requests successfully
+         * returns => 1 failed //database error
+         */
+        int flag = 3;
+        try {
+            Connection cn = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
+            /*PreparedStatement deleteStmt;
+            deleteStmt = cn.prepareStatement("delete from friend_requests (email, request_sender) values(?,?)");
+            deleteStmt.setString(1, receiverEmail);
+            deleteStmt.setString(2, userEmail);
+            deleteStmt.execute();*/
+            Statement stmt=cn.createStatement();
+            String query="delete from friend_requests where request_sender='"+receiverEmail+"' and email ='"+userEmail+"'";
+            stmt.executeUpdate(query);
+            flag = 0;
+            cn.close();
+        } catch (SQLException ex) {
+//            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            flag = 1;
+        }
+        return flag;
+    }
 }

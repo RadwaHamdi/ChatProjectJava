@@ -56,7 +56,11 @@
                 <StringItem index="4" value="Item 5"/>
               </StringArray>
             </Property>
+            <Property name="selectionMode" type="int" value="0"/>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="friendRequestsListMousePressed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -77,6 +81,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="deny"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="denyButtonActionPerformed"/>
+      </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="286" y="40" width="86" height="-1"/>

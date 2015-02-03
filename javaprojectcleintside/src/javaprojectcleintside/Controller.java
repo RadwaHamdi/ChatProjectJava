@@ -5,12 +5,15 @@
 package javaprojectcleintside;
 
 import common.*;
+import demo.Configuration;
+import demo.ObjectFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -27,7 +30,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.filechooser.FileView;
-import org.omg.CORBA.MARSHAL;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 /**
  *
@@ -45,63 +51,93 @@ public class Controller implements Serializable {
     SignIn signInView;
     SignUp signUpView;
     Registry reg;
-    boolean serverstate=true;
-    
+    boolean serverstate = true;
+
     CleintModelInterfaceImplementation userref;
 
     HashMap<Integer, ArrayList<String>> sessions;
 
     public Controller() throws RemoteException {
-        signInView = new SignIn(this);
-        model = new CleintModelInterfaceImplementation(this);
-        sessions = new HashMap<Integer, ArrayList<String>>();
 
+        JAXBContext context;
         try {
 
-            reg = LocateRegistry.getRegistry("127.0.0.1", 5005);
-            obj = (ServicesInterface) reg.lookup("chatservice");
-            serverstate=obj.checkServerState();
+            context = JAXBContext.newInstance("demo");
+            Unmarshaller unmarsh = context.createUnmarshaller();
+            Configuration config = (Configuration) unmarsh.unmarshal(new File("C:\\Users\\Alaa\\Desktop\\project\\ConfigurationFile.xml"));
+            System.out.println("email: " + config.getEmail());
+            System.out.println("signed value: " + config.getSigned());
+            if (config.getSigned() == 0) {
+                reg = LocateRegistry.getRegistry("127.0.0.1", 5005);
+                obj = (ServicesInterface) reg.lookup("chatservice");
+                serverstate = obj.checkServerState();
+                user u = obj.getUser(config.getEmail());
+                veiwRef = new MainFrame(this, obj.retreiveContactList(u), u);
+                veiw = veiwRef;
+                newcleint = u;
+                userref = new CleintModelInterfaceImplementation(this);
+                obj.registerCleint(userref, u.getEmail());
 
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Server is off");
-            System.exit(0);
+            } else {
+                System.out.println("failed to login automatic");
+                signInView = new SignIn(this);
+                model = new CleintModelInterfaceImplementation(this);
+                sessions = new HashMap<Integer, ArrayList<String>>();
+
+                try {
+
+                    reg = LocateRegistry.getRegistry("127.0.0.1", 5005);
+                    obj = (ServicesInterface) reg.lookup("chatservice");
+                    serverstate = obj.checkServerState();
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Server is off");
+                    System.exit(0);
+                }
+            }
+        } catch (JAXBException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (AccessException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+//            Mymessage myMessage = (Mymessage) unmarsh.unmarshal(new File(mypackage + "intro.xml"));
+        //   Mymessage message = (Mymessage)JAXBMessage.getValue();
     }
 
- 
     public void signInClientSide() {
-         int validate=0;
-            if(validateEmailSignIn(signInView.getEmailTextField().getText())==-1){
-                validate=-1;
-            }
-            if(validateEmptyFieldsSignIn(signInView.getEmailTextField().getText(),signInView.getPasswordTextField().getText())==-1){
-                validate=-1;
-            }
-            if(validate==0){
-        try {
-            user newUser;
-           
-           
-            if(serverstate==true){
-                
-            newUser = obj.signInServerSide(signInView.getEmailTextField().getText(), signInView.getPasswordTextField().getText());         
-           if(newUser.getEmail()==null||newUser==null){
-            JOptionPane.showMessageDialog(null,"Sorry Server is off");
-            signInView.dispose();
-           }
-           else{
-            singInHandling(newUser);
-           }
-            }
-            else{
-            JOptionPane.showMessageDialog(null,"Sorry Server is off");
-            signInView.dispose();
-            }
-        } catch (RemoteException ex) {
-            JOptionPane.showMessageDialog(null,"Sorry Server is off");
-            signInView.dispose();
+
+        int validate = 0;
+        if (validateEmailSignIn(signInView.getEmailTextField().getText()) == -1) {
+            validate = -1;
         }
+        if (validateEmptyFieldsSignIn(signInView.getEmailTextField().getText(), signInView.getPasswordTextField().getText()) == -1) {
+            validate = -1;
+        }
+        if (validate == 0) {
+            try {
+                user newUser;
+
+                if (serverstate == true) {
+
+                    newUser = obj.signInServerSide(signInView.getEmailTextField().getText(), signInView.getPasswordTextField().getText());
+                    if (newUser == null || newUser.getEmail() == null) {
+                        JOptionPane.showMessageDialog(null, "Sorry Server is off");
+                        signInView.dispose();
+                    } else {
+                        singInHandling(newUser);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Sorry Server is off");
+                    signInView.dispose();
+                }
+            } catch (RemoteException ex) {
+                JOptionPane.showMessageDialog(null, "Sorry Server is off");
+                signInView.dispose();
             }
+        }
     }
 
     public void singInHandling(user u) {
@@ -111,13 +147,13 @@ public class Controller implements Serializable {
                 JOptionPane.showMessageDialog(signInView, "sign in successfully");
                 signInView.dispose();
                 veiwRef = new MainFrame(this, obj.retreiveContactList(u), u);
-                veiw=veiwRef;
-                newcleint=u;
-                userref=new CleintModelInterfaceImplementation(this);
-                obj.registerCleint(userref,u.getEmail());
+                veiw = veiwRef;
+                newcleint = u;
+                userref = new CleintModelInterfaceImplementation(this);
+                obj.registerCleint(userref, u.getEmail());
             } catch (RemoteException ex) {
                 Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-                 JOptionPane.showMessageDialog(signInView, "user doesn't exist");
+                JOptionPane.showMessageDialog(signInView, "user doesn't exist");
             }
 
         } else {
@@ -129,7 +165,7 @@ public class Controller implements Serializable {
 
     public void signUpClientSide(SignUp ref) {
         signUpView = ref;
-        
+
         newcleint = new user();
         newcleint.setEmail(signUpView.getEmailTextField().getText());
         newcleint.setUserName(signUpView.getUserNameTextField().getText());
@@ -138,51 +174,45 @@ public class Controller implements Serializable {
         newcleint.setLastName(signUpView.getLastNameTextField().getText());
         //
         System.out.println(signUpView.getEmailTextField().getText());
-       int check_email= validateEmail(signUpView.getEmailTextField().getText());
-       int check_empty=validateEmptyFields(signUpView.getFirstNameTextFeild().getText(),signUpView.getLastNameTextField().getText(),signUpView.getUserNameTextField().getText(), signUpView.getEmailTextField().getText(),signUpView.getPasswordTextField().getText(),signUpView.getRepasswordTextField().getText() );
-       int check_password=validateRepassword(signUpView.getPasswordTextField().getText(), signUpView.getRepasswordTextField().getText());
-       int final_check=0;
-       
-       if(check_empty==-1){
-           
-       final_check=-1;
-       }
-       if(check_email==-1)
-       {
-           final_check=-1;
-                   }
-       if(check_password==-1){
-           final_check=-1;
-       }
-       if(final_check==0){ 
-       try {
-            boolean check=obj.checkServerState();
-            if(serverstate==true){
-            System.out.println(serverstate);
-            int inserted=obj.insertUserData(newcleint);    
-            if(inserted==0){
-            veiwRef = new MainFrame(this, obj.retreiveContactList(newcleint), newcleint);
-            userref=new CleintModelInterfaceImplementation(this);
-            obj.registerCleint(userref,newcleint.getEmail());
-            }
-            else{
-                    JOptionPane.showMessageDialog(null,"Sorry this user is already registered");
-             }
-            signUpView.dispose();
-            
-            
-           
-            
-            }
-            else{
-            JOptionPane.showMessageDialog(null,"Sorry Server is off");
-            signUpView.dispose();
-            }
-        } catch (RemoteException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        int check_email = validateEmail(signUpView.getEmailTextField().getText());
+        int check_empty = validateEmptyFields(signUpView.getFirstNameTextFeild().getText(), signUpView.getLastNameTextField().getText(), signUpView.getUserNameTextField().getText(), signUpView.getEmailTextField().getText(), signUpView.getPasswordTextField().getText(), signUpView.getRepasswordTextField().getText());
+        int check_password = validateRepassword(signUpView.getPasswordTextField().getText(), signUpView.getRepasswordTextField().getText());
+        int final_check = 0;
+
+        if (check_empty == -1) {
+
+            final_check = -1;
         }
-       }
-       
+        if (check_email == -1) {
+            final_check = -1;
+        }
+        if (check_password == -1) {
+            final_check = -1;
+        }
+        if (final_check == 0) {
+            try {
+                boolean check = obj.checkServerState();
+                if (serverstate == true) {
+                    System.out.println(serverstate);
+                    int inserted = obj.insertUserData(newcleint);
+                    if (inserted == 0) {
+                        veiwRef = new MainFrame(this, obj.retreiveContactList(newcleint), newcleint);
+                        userref = new CleintModelInterfaceImplementation(this);
+                        obj.registerCleint(userref, newcleint.getEmail());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Sorry this user is already registered");
+                    }
+                    signUpView.dispose();
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Sorry Server is off");
+                    signUpView.dispose();
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
     }
 
     public static void main(String[] args) {
@@ -199,11 +229,10 @@ public class Controller implements Serializable {
     public int setStatus(String email, int status) {
         int inserted = 0;
         try {
-            if(serverstate==true){
-            inserted = obj.setStatusServer(email, status);
-            }
-            else{
-            JOptionPane.showMessageDialog(null,"Sorry Server is off");
+            if (serverstate == true) {
+                inserted = obj.setStatusServer(email, status);
+            } else {
+                JOptionPane.showMessageDialog(null, "Sorry Server is off");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -222,15 +251,14 @@ public class Controller implements Serializable {
 
     public void start_chat_session(ArrayList<String> members) {
         try {
-            if(serverstate==true){
-            int check = obj.startNewChatSessionstr(newcleint.getEmail(), members);
-            
-            if (check == -1) {
-                JOptionPane.showMessageDialog(null, "Sorry,you canot start this chat  session");
-            }
-            }
-            else{
-            JOptionPane.showMessageDialog(null,"Sorry Server is off");
+            if (serverstate == true) {
+                int check = obj.startNewChatSessionstr(newcleint.getEmail(), members);
+
+                if (check == -1) {
+                    JOptionPane.showMessageDialog(null, "Sorry,you canot start this chat  session");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Sorry Server is off");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -239,19 +267,17 @@ public class Controller implements Serializable {
 
     public void sendMessageToServerSide(String message, int chat_id) {
         try {
-            
-            if(serverstate==true){
-            obj.sendMessagetoserver(newcleint.getUserName() + " : " + message, chat_id);
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(null,"Sorry Server is off");
+
+            if (serverstate == true) {
+                obj.sendMessagetoserver(newcleint.getUserName() + " : " + message, chat_id);
+            } else {
+                JOptionPane.showMessageDialog(null, "Sorry Server is off");
             }
 
         } catch (Exception ex) {
             ex.printStackTrace();
             //JOptionPane.showMessageDialog(null,"Sorry Server is off");
-            
+
         }
 
     }
@@ -278,150 +304,163 @@ public class Controller implements Serializable {
             chats.get(chat_id).dispose();
         }
     }
-    public  void unRegisterCleint(){
+
+    public void unRegisterCleint() {
         try {
-            if(serverstate==true){
-            obj.unRegisterCleintServerSide(newcleint,userref);
+            if (serverstate == true) {
+                obj.unRegisterCleintServerSide(newcleint, userref);
             }
-            
+
         } catch (RemoteException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void signOutCleintSide(){
+
+    public void signOutCleintSide() {
         try {
-            if(serverstate==true){
-            obj.unRegisterCleintServerSide(newcleint, userref);
-             veiwRef.dispose();
-            SignIn logInAgain=new SignIn(this);
-            signInView=logInAgain;
-            }
-            else{
+            if (serverstate == true) {
+                obj.unRegisterCleintServerSide(newcleint, userref);
+                veiwRef.dispose();
+                SignIn logInAgain = new SignIn(this);
+
+                try {
+                    JAXBContext context;
+                    context = JAXBContext.newInstance("demo");
+                    ObjectFactory factory = new ObjectFactory();
+                    Configuration conf = factory.createConfiguration();
+                    conf.setEmail(newcleint.getEmail());
+                    conf.setSigned(1);
+                    String mypackage = "C:\\Users\\Alaa\\Desktop\\project\\Team13\\javaprojectcleintside\\src\\javaprojectcleintside\\Config_schema.xsd";
+                    Marshaller marshal = context.createMarshaller();
+                    marshal.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, mypackage);
+                    marshal.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+                    marshal.marshal(conf, new File("C:\\Users\\Alaa\\Desktop\\project\\ConfigurationFile.xml"));
+                } catch (JAXBException ex) {
+                    Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                signInView = logInAgain;
+            } else {
                 JOptionPane.showMessageDialog(null, "Sorry server is off");
             }
-           
+
             //signInClientSide();
-            
         } catch (RemoteException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
-    } 
-    public void TellCleint_ServerIsOff(){
-       serverstate=false;
-       
     }
+
+    public void TellCleint_ServerIsOff() {
+        serverstate = false;
+
+    }
+
     public void TellCleint_ServerIson() {
-       serverstate=true;
-       
+        serverstate = true;
+
     }
-    
-    
-    
-     public int validateEmail(String emailTextField){
-         
+
+    public int validateEmail(String emailTextField) {
+
         //String email= "Mm.9mS_s@nlicom.C_w";//put here emailTextField instead
         Pattern emailPattern = Pattern.compile("[a-z0-9._-]+@[a-z0-9.-]+\\.[a-z]{2,4}+");
         Matcher match = emailPattern.matcher(emailTextField.toLowerCase());
-        boolean b= match.matches();
+        boolean b = match.matches();
         System.out.println(b);
-        if(b==false){
+        if (b == false) {
             signUpView.dialog("Please enter a valid email");
             return -1;
-        }
-        else{
+        } else {
             return 0;
         }
     }
-    public int validateEmptyFields(String firstNameTextField,String lastNameTextField,String userNameTextField,String passwordTextField,String repasswordTextField,String emailTextField){
-        int check=0;
-        
-        if(firstNameTextField.equals("")){
-            
+
+    public int validateEmptyFields(String firstNameTextField, String lastNameTextField, String userNameTextField, String passwordTextField, String repasswordTextField, String emailTextField) {
+        int check = 0;
+
+        if (firstNameTextField.equals("")) {
+
             signUpView.dialog("Please enter your first name");
-            check=-1;
+            check = -1;
         }
-        if(lastNameTextField.equals("")){
-           signUpView.dialog("Please enter your last name");
-           check=-1;
+        if (lastNameTextField.equals("")) {
+            signUpView.dialog("Please enter your last name");
+            check = -1;
         }
-        if(userNameTextField.equals("")){
+        if (userNameTextField.equals("")) {
             signUpView.dialog("Please enter your user name");
-            check=-1;
+            check = -1;
         }
-        if(passwordTextField.equals("")){
-           signUpView.dialog("Please enter your password");
-           check=-1;
+        if (passwordTextField.equals("")) {
+            signUpView.dialog("Please enter your password");
+            check = -1;
         }
-        if(repasswordTextField.equals("")){
+        if (repasswordTextField.equals("")) {
             signUpView.dialog("Please enter your password again");
-            check=-1;
+            check = -1;
         }
-        if(emailTextField.equals("")){
+        if (emailTextField.equals("")) {
             signUpView.dialog("Please enter your email");
-            check=-1;
+            check = -1;
         }
-        return  check;
+        return check;
     }
-    public int validateRepassword(String passwordTextField,String repasswordTextField){
-        if(!repasswordTextField.equalsIgnoreCase(passwordTextField)){
+
+    public int validateRepassword(String passwordTextField, String repasswordTextField) {
+        if (!repasswordTextField.equalsIgnoreCase(passwordTextField)) {
             signUpView.dialog("Please enter your password correctly");
             return -1;
-        }
-        else{
-        return  0;
+        } else {
+            return 0;
         }
     }
-    
-    
-    public int validateEmptyFieldsSignIn(String Email,String password){
-        int check=0;
-        
-        if(Email.equals("")){
-            
+
+    public int validateEmptyFieldsSignIn(String Email, String password) {
+        int check = 0;
+
+        if (Email.equals("")) {
+
             signInView.dialog("Please enter your email");
-            check=-1;
+            check = -1;
         }
-        if(password.equals("")){
-           signInView.dialog("Please enter your passward");
-           check=-1;
+        if (password.equals("")) {
+            signInView.dialog("Please enter your passward");
+            check = -1;
         }
-      
-       
-        return  check;
+
+        return check;
     }
-    public int validateEmailSignIn(String emailTextField){
-         
+
+    public int validateEmailSignIn(String emailTextField) {
+
         //String email= "Mm.9mS_s@nlicom.C_w";//put here emailTextField instead
         Pattern emailPattern = Pattern.compile("[a-z0-9._-]+@[a-z0-9.-]+\\.[a-z]{2,4}+");
         Matcher match = emailPattern.matcher(emailTextField.toLowerCase());
-        boolean b= match.matches();
+        boolean b = match.matches();
         System.out.println(b);
-        if(b==false){
+        if (b == false) {
             signInView.dialog("Please enter a valid email");
             return -1;
-        }
-        else{
+        } else {
             return 0;
         }
     }
-    public void displayadvertisement(byte[] b){
-        
+
+    public void displayadvertisement(byte[] b) {
+
         try {
             System.out.println("receive advertisment");
             FileOutputStream fos = new FileOutputStream("C:\\Users\\Alaa\\Desktop\\project\\test2.jpg");
             fos.write(b);
             fos.close();
             System.out.println("recieved");
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         veiwRef.showAdvertisement("C:\\Users\\Alaa\\Desktop\\project\\test2.jpg");
-        
-        
-    
+
     }
-    
-    
+
     public void uploadFile(int frameId) {
         try {
             JFileChooser fileChooser = new JFileChooser();
@@ -432,21 +471,20 @@ public class Controller implements Serializable {
                 }
 
             });
-            
+
             fileChooser.showOpenDialog(veiwRef);
             //fileChooser.setCurrentDirectory(new File("C:\\Users\\ewess\\Desktop"));
-           int fileChooserResponse = 0 ; 
-            
-            
-            if (fileChooserResponse == JFileChooser.APPROVE_OPTION ) {
+            int fileChooserResponse = 0;
+
+            if (fileChooserResponse == JFileChooser.APPROVE_OPTION) {
                 System.out.println("upload file ");
                 File file = new File(fileChooser.getSelectedFile().toURI());
                 FileInputStream fis = new FileInputStream((file.getAbsolutePath()));
                 int fileSize = fis.available();
                 byte[] b = new byte[fileSize];
                 fis.read(b);
-                
-               obj.downloadFileServerSide(file,b,frameId,newcleint.getEmail());
+
+                obj.downloadFileServerSide(file, b, frameId, newcleint.getEmail());
                 System.out.println("FileReaderStream >> file size ");
                 fis.close();
             }
@@ -454,53 +492,64 @@ public class Controller implements Serializable {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
     }
-    public  int  addFriendClienSide(String userEmail,String receiverEmail){
-        int flag = 3; 
-        
+
+    public int addFriendClienSide(String userEmail, String receiverEmail) {
+        int flag = 3;
+
         try {
-            
-             flag = obj.addFriendServerSide(userEmail, receiverEmail);
-         } catch (RemoteException ex) {
-             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+
+            flag = obj.addFriendServerSide(userEmail, receiverEmail);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             // flag = 1;
-         }
+        }
         return flag;
     }
-   public int removeFriendClientSide(String userEmail,String friendEmail){
-       int check=2;
+
+    public int removeFriendClientSide(String userEmail, String friendEmail) {
+        int check = 2;
         try {
-          check = obj.removeFriendServerSide(userEmail,friendEmail);
-        } catch (Exception e){
+            check = obj.removeFriendServerSide(userEmail, friendEmail);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return check;
-   }
-    
-    
-    
-   public  void popUpOnlineCleints(user Client){
-   veiwRef.popUpMessage(Client);
-   
-   }
-   public Vector getFriendRequests(user Cleint){
-       Vector<user> requests=new Vector<user>();
-       
-       try{
-       requests=obj.retreiveFriendRequestsList(Cleint);
-       }catch(Exception e){
-           e.printStackTrace();
-       }
-       
-       
-       return requests;
-   }
-    public int acceptFriendRequest(String user_email,String Sender_email){
-        int check=0;
-        try{
-        check=obj.acceptFriendServerSide(user_email, Sender_email);
-        }catch(Exception e){
+    }
+
+    public void popUpOnlineCleints(user Client) {
+        veiwRef.popUpMessage(Client);
+
+    }
+
+    public Vector getFriendRequests(user Cleint) {
+        Vector<user> requests = new Vector<user>();
+
+        try {
+            requests = obj.retreiveFriendRequestsList(Cleint);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return requests;
+    }
+
+    public int acceptFriendRequest(String user_email, String Sender_email) {
+        int check = 0;
+        try {
+            check = obj.acceptFriendServerSide(user_email, Sender_email);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return check;
+    }
+
+    public int denyFriendRequest(String user_email, String Sender_email) {
+        int check = 0;
+        try {
+            check = obj.denyFriendRequesServerSide(user_email, Sender_email);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return check;

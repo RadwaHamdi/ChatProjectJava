@@ -36,6 +36,7 @@ public class ServerController  {
     public static HashMap<Integer, ArrayList<String>> sessions_ids;
     public static int counter;
     ServerView view;
+    ServerGUI serverView ;
     ServicesImplementation obj;
     Registry reg;
     boolean serverRunning=true;
@@ -43,8 +44,10 @@ public class ServerController  {
     Vector<CleintModelInterface> onlineCleints;
     CleintModelInterface first;
     public  ServerController(){
-        view=new ServerView(this);
-        view.addWindowListener(new WindowListener() {
+        //view=new ServerView(this);
+        serverView = new ServerGUI(this);
+        
+        serverView.addWindowListener(new WindowListener() {
 
             public void windowOpened(WindowEvent e) {
             }
@@ -63,7 +66,7 @@ public class ServerController  {
                      }
             }
                 
-             JOptionPane.showMessageDialog(view,"Server is stopped");
+             JOptionPane.showMessageDialog(serverView,"Server is stopped");
             serverRunning=false;
                 
             }
@@ -94,7 +97,7 @@ public class ServerController  {
         
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,"Server is already runing");
-            view.dispose();
+            serverView.dispose();
         }
         
     }
@@ -126,10 +129,10 @@ public class ServerController  {
                       
                         serverRunning=true;
                         
-                        JOptionPane.showMessageDialog(view,"Server is started");
+                        JOptionPane.showMessageDialog(serverView,"Server is started");
                         }
                         else{
-                        JOptionPane.showMessageDialog(view,"Server is already running");
+                        JOptionPane.showMessageDialog(serverView,"Server is already running");
                         }
      
 		}catch(RemoteException ex){
@@ -156,11 +159,11 @@ public class ServerController  {
                  System.out.println("send to cleint "+i+" to  him serverstopped");
             }
                     
-             JOptionPane.showMessageDialog(view,"Server is stopped");
+             JOptionPane.showMessageDialog(serverView,"Server is stopped");
             serverRunning=false;
             }
             else{
-                JOptionPane.showMessageDialog(view, "Server is already not running");
+                JOptionPane.showMessageDialog(serverView, "Server is already not running");
             }
         } catch (RemoteException ex) {
             Logger.getLogger(ServerController.class.getName()).log(Level.SEVERE, null, ex);

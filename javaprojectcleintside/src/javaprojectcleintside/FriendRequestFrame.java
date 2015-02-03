@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Vector;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,6 +22,8 @@ public class FriendRequestFrame extends javax.swing.JFrame {
     Controller controller;
     Vector<user> friend_requests;
      Vector requests;
+     Vector newlist;
+     String request_sender="";
     /**
      * Creates new form FriendRequestFrame
      */
@@ -31,28 +34,12 @@ public class FriendRequestFrame extends javax.swing.JFrame {
         for (int i = 0; i < friendRequests.size(); i++) {
             requests.add(friendRequests.get(i).getUserName());
         }
-       
+        newlist=requests;
+        System.out.println(newlist);
         friend_requests=friendRequests;
         controller=c;
         friendRequestsList.setListData(requests);
-        friendRequestsList.addMouseListener(new MouseListener() {
-
-            public void mouseClicked(MouseEvent e) {
-            }
-
-            public void mousePressed(MouseEvent e) {
-                System.out.println(friendRequestsList.getSelectedValue());
-            }
-
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-        });
+        
                 
         setVisible(true);
     }
@@ -85,6 +72,12 @@ public class FriendRequestFrame extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        friendRequestsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        friendRequestsList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                friendRequestsListMousePressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(friendRequestsList);
 
         getContentPane().add(jScrollPane1);
@@ -100,6 +93,11 @@ public class FriendRequestFrame extends javax.swing.JFrame {
         acceptButton.setBounds(286, 11, 86, 23);
 
         denyButton.setText("deny");
+        denyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                denyButtonActionPerformed(evt);
+            }
+        });
         getContentPane().add(denyButton);
         denyButton.setBounds(286, 40, 86, 23);
 
@@ -123,30 +121,73 @@ public class FriendRequestFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
-      String sender=friendRequestsList.getSelectedValue().toString();
+    try{
+       
+     request_sender=friendRequestsList.getSelectedValue().toString();
       for(int i=0;i<friend_requests.size();i++){
-          if(friend_requests.get(i).getUserName().equals(sender)){
-              System.out.println(friend_requests.get(i).getEmail());
-              System.out.println(controller.newcleint.getEmail());
+          if(friend_requests.get(i).getUserName().equals(request_sender)){
+             
               controller.acceptFriendRequest(controller.newcleint.getEmail(),friend_requests.get(i).getEmail());
               
-              
+             
               break;
           }
       }
-      Vector newlist=new Vector();
       
-      for(int i=0;i<friend_requests.size();i++){
-          if(friend_requests.get(i).getUserName().equals(sender)){
-              continue;
+      
+        System.out.println("newlist is :"+newlist);
+      for(int i=0;i<newlist.size();i++){
+          if(newlist.get(i).equals(request_sender)){
+              newlist.remove(i);
           }
-          newlist.add(friend_requests.get(i).getUserName());
-          
+         
+      }
+        System.out.println("newlist after is :"+newlist);
+              friendRequestsList.setListData(newlist); 
+           
+    }catch(Exception e){
+        JOptionPane.showMessageDialog(null, "Please choose item from list");
+    }
+    }//GEN-LAST:event_acceptButtonActionPerformed
+
+    private void denyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_denyButtonActionPerformed
+        // TODO add your handling code here:
+        try{
+             request_sender=friendRequestsList.getSelectedValue().toString();
+        
+      for(int i=0;i<friend_requests.size();i++){
+          if(friend_requests.get(i).getUserName().equals(request_sender)){
+             
+              controller.denyFriendRequest(controller.newcleint.getEmail(),friend_requests.get(i).getEmail());
+              
+             
+              break;
+          }
       }
       
+     
+            System.out.println("new lis is :"+newlist);
+      for(int i=0;i<newlist.size();i++){
+          if(newlist.get(i).equals(request_sender)){
+              newlist.remove(i);
+          }
+         
+          
+      }
+              System.out.println("new list after is "+newlist);
               friendRequestsList.setListData(newlist); 
+      
+        }catch(Exception e){
+        JOptionPane.showMessageDialog(null, "Please choose item from list");
+        }
         
-    }//GEN-LAST:event_acceptButtonActionPerformed
+    }//GEN-LAST:event_denyButtonActionPerformed
+
+    private void friendRequestsListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_friendRequestsListMousePressed
+       
+       
+       
+    }//GEN-LAST:event_friendRequestsListMousePressed
 
     /**
      * @param args the command line arguments

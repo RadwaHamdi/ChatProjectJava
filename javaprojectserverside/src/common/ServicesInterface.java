@@ -34,4 +34,6 @@ public interface ServicesInterface extends Remote{
     int removeFriendServerSide(String userEmail, String receiverEmail) throws RemoteException;
     public Vector<user> retreiveFriendRequestsList(user myuser)throws RemoteException;
     public int acceptFriendServerSide(String userEmail, String receiverEmail) throws RemoteException;
+    public int denyFriendRequesServerSide(String userEmail, String receiverEmail)throws RemoteException;
+    public user getUser(String userEmail)throws RemoteException;
 }

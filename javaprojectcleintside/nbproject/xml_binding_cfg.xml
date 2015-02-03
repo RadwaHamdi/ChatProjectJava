@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<schemas xmlns='http://xml.netbeans.org/schema/JAXBWizConfig' destdir='build/generated-sources/jaxb' projectName='javaprojectcleintside' version='1.0'>
+	<schema type='-xmlschema' package='demo' name='configuration'>
+		<xjc-options>
+		</xjc-options>
+		<schema-sources>
+			<schema-source location='xml-resources/jaxb/configuration/Config_schema.xsd' origLocation='src/javaprojectcleintside/Config_schema.xsd'/>
+		</schema-sources>
+		<bindings>
+		</bindings>
+		<catalog/>
+	</schema>
+</schemas>
