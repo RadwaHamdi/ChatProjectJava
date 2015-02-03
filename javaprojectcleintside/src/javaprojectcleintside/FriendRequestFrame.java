@@ -6,6 +6,7 @@
 
 package javaprojectcleintside;
 
+import common.user;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -18,17 +19,22 @@ import javax.swing.JList;
  */
 public class FriendRequestFrame extends javax.swing.JFrame {
     Controller controller;
-    Vector friend_requests;
+    Vector<user> friend_requests;
+     Vector requests;
     /**
      * Creates new form FriendRequestFrame
      */
-    public FriendRequestFrame(Point point,Controller c,Vector friendRequests) {
+    public FriendRequestFrame(Point point,Controller c,Vector<user> friendRequests) {
         initComponents();
         setLocation(point);
-        
+        requests=new Vector();
+        for (int i = 0; i < friendRequests.size(); i++) {
+            requests.add(friendRequests.get(i).getUserName());
+        }
+       
         friend_requests=friendRequests;
         controller=c;
-        friendRequestsList.setListData(friend_requests);
+        friendRequestsList.setListData(requests);
         friendRequestsList.addMouseListener(new MouseListener() {
 
             public void mouseClicked(MouseEvent e) {
@@ -85,6 +91,11 @@ public class FriendRequestFrame extends javax.swing.JFrame {
         jScrollPane1.setBounds(10, 10, 270, 170);
 
         acceptButton.setText("accept");
+        acceptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                acceptButtonActionPerformed(evt);
+            }
+        });
         getContentPane().add(acceptButton);
         acceptButton.setBounds(286, 11, 86, 23);
 
@@ -110,6 +121,32 @@ public class FriendRequestFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
+      String sender=friendRequestsList.getSelectedValue().toString();
+      for(int i=0;i<friend_requests.size();i++){
+          if(friend_requests.get(i).getUserName().equals(sender)){
+              System.out.println(friend_requests.get(i).getEmail());
+              System.out.println(controller.newcleint.getEmail());
+              controller.acceptFriendRequest(controller.newcleint.getEmail(),friend_requests.get(i).getEmail());
+              
+              
+              break;
+          }
+      }
+      Vector newlist=new Vector();
+      
+      for(int i=0;i<friend_requests.size();i++){
+          if(friend_requests.get(i).getUserName().equals(sender)){
+              continue;
+          }
+          newlist.add(friend_requests.get(i).getUserName());
+          
+      }
+      
+              friendRequestsList.setListData(newlist); 
+        
+    }//GEN-LAST:event_acceptButtonActionPerformed
 
     /**
      * @param args the command line arguments

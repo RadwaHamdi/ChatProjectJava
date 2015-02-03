@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import javax.swing.*;
 import java.util.Date;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -22,12 +24,8 @@ public class DatabaseConnection {
      * @param args the command line arguments
      */
   public static void main(String[] args) {
-   user u=new user();
-   u.setEmail("Ahmed@gmail.com");
-     Vector<user> freinds= getFriendRequestsList(u);
-     for(int i=0;i<freinds.size();i++){
-         System.out.println(freinds.get(i).getUserName());
-     }
+     insertContact("Maram@gmail.com", "alaarady93@gmail.com");
+     
       
     }
     public static Vector<user> retreiveContactList(user myuser) {
@@ -312,5 +310,35 @@ public class DatabaseConnection {
         }
         return friend_list;
    }
+  public static int insertContact(String userEmail, String receiverEmail) {
+        int flag = 3;
+        try {
+            Connection cn = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
+            PreparedStatement insertStmt = cn.prepareStatement("insert into contacts (user_email, friend_email) values(?,?)");
+            insertStmt.setString(1, receiverEmail);
+            insertStmt.setString(2, userEmail);
+            insertStmt.execute();
 
+            insertStmt = cn.prepareStatement("insert into contacts (user_email, friend_email) values(?,?)");
+            insertStmt.setString(2, receiverEmail);
+            insertStmt.setString(1, userEmail);
+            insertStmt.execute();
+
+            /*PreparedStatement deleteStmt;
+            deleteStmt = cn.prepareStatement("delete from friend_requests (email, request_sender) values(?,?)");
+            deleteStmt.setString(1, userEmail);
+            deleteStmt.setString(2, receiverEmail);
+            deleteStmt.execute();
+                    */
+            Statement stmt=cn.createStatement();
+            String query="delete from friend_requests where request_sender='"+receiverEmail+"' and email ='"+userEmail+"'";
+            stmt.executeUpdate(query);
+            flag = 0;
+            cn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseConnection.class.getName()).log(Level.SEVERE, null, ex);
+            flag = 1;
+        }
+        return flag;
+    }
 }

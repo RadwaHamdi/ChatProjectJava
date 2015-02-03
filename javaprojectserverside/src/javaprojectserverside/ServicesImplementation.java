@@ -303,4 +303,7 @@ public class ServicesImplementation extends UnicastRemoteObject implements Servi
     public Vector<user> retreiveFriendRequestsList(user myuser){
      return DatabaseConnection.getFriendRequestsList(myuser);
     }
+    public int acceptFriendServerSide(String userEmail, String receiverEmail)  {
+        return DatabaseConnection.insertContact(userEmail, receiverEmail);
+    }
 }

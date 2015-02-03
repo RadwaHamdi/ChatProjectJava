@@ -486,19 +486,23 @@ public class Controller implements Serializable {
    }
    public Vector getFriendRequests(user Cleint){
        Vector<user> requests=new Vector<user>();
-       Vector friendRequests=new Vector();
+       
        try{
        requests=obj.retreiveFriendRequestsList(Cleint);
        }catch(Exception e){
            e.printStackTrace();
        }
-       for(int i=0;i<requests.size();i++){
-           friendRequests.add(requests.get(i).getUserName());
        
-        }
-       System.out.println(requests.size());
-       System.out.println(friendRequests);
-       return friendRequests;
+       
+       return requests;
    }
-    
+    public int acceptFriendRequest(String user_email,String Sender_email){
+        int check=0;
+        try{
+        check=obj.acceptFriendServerSide(user_email, Sender_email);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return check;
+    }
 }
