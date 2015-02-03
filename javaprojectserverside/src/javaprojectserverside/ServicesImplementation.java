@@ -74,6 +74,18 @@ public class ServicesImplementation extends UnicastRemoteObject implements Servi
                 e.printStackTrace();
             }
         }
+        
+       final user newuser=DatabaseConnection.getUserDate(user_email);
+        Thread t=new Thread(new Runnable() {
+
+            public void run() {
+                sendNotificationToClient(newuser);
+            }
+        });
+        t.start();
+        
+       
+        
     }
 
     public void unRegisterCleintServerSide(user oldUser, CleintModelInterface userRef) {
@@ -158,6 +170,8 @@ public class ServicesImplementation extends UnicastRemoteObject implements Servi
     public void sendMessagetoserver(String message, int chat_id) throws RemoteException {
         if (controller.serverRunning == true) {
             ArrayList<String> message_receivers = ServerController.sessions_ids.get(chat_id);
+            System.out.println("session id is :"+chat_id);
+            System.out.println("Sesseion members is :"+ServerController.sessions_ids.get(chat_id));
             for (int i = 0; i < message_receivers.size(); i++) {
                 CleintModelInterface receiver = cleints_with_email.get(message_receivers.get(i));
                 receiver.receiveMessageFromServer(message, chat_id);
@@ -265,5 +279,28 @@ public class ServicesImplementation extends UnicastRemoteObject implements Servi
     }
     public int removeFriendServerSide(String userEmail, String receiverEmail) throws RemoteException {
         return deleteFromContact(userEmail, receiverEmail);
+    }
+    public void sendNotificationToClient(user Cleint){
+       ArrayList<String> friends=DatabaseConnection.getFriendsOfCleint(Cleint);
+       CleintModelInterface cleintRef;
+        for (int i = 0; i <friends.size(); i++) {
+            if(online_users.contains(friends.get(i))){
+                    cleintRef=cleints_with_email.get(friends.get(i));
+                    try{
+                    cleintRef.popUpOnlineCleintsClientSide(Cleint);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+            }
+            else{
+                continue;
+            }
+        }
+       
+    
+    }
+
+    public Vector<user> retreiveFriendRequestsList(user myuser){
+     return DatabaseConnection.getFriendRequestsList(myuser);
     }
 }

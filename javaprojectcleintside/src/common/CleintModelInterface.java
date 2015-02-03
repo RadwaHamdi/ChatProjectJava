@@ -32,4 +32,7 @@ public interface CleintModelInterface extends Remote {
     public int downloadFileClientSide(File file, byte[] b, int frameId) throws RemoteException;
 
     public void handleDownloadFileClientSide(int flag) throws RemoteException;
+    
+    public void popUpOnlineCleintsClientSide(user onlineFriend) throws RemoteException;
+    
 }

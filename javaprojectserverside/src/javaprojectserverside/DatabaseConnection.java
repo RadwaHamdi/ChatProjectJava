@@ -7,6 +7,7 @@ package javaprojectserverside;
 import common.user;
 import java.io.Serializable;
 import java.sql.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import java.util.Date;
 import java.util.Vector;
@@ -20,11 +21,15 @@ public class DatabaseConnection {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        System.out.println(changeuserstatus("Ahmed@gmail.com", 3));
-
+  public static void main(String[] args) {
+   user u=new user();
+   u.setEmail("Ahmed@gmail.com");
+     Vector<user> freinds= getFriendRequestsList(u);
+     for(int i=0;i<freinds.size();i++){
+         System.out.println(freinds.get(i).getUserName());
+     }
+      
     }
-
     public static Vector<user> retreiveContactList(user myuser) {
         Vector contact_list = new Vector();
         try {
@@ -196,22 +201,116 @@ public class DatabaseConnection {
          Connection cn=null;
         try {
             cn = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
-            PreparedStatement deleteStmt = cn.prepareStatement("delete from contacts (user_email, request_sender) values(?,?)");
+           /* Statement stmt=cn.createStatement();
+            String query=new String("delete from contacts where user_email='"+userEmail+"' and friend_email='"+receiverEmail+"'");
+            System.out.println(query);
+            stmt.executeUpdate(query);
+            Statement stmt1=cn.createStatement();
+            String query1=new String("delete from contacts  where friend_email='"+receiverEmail+"' and user_email='"+userEmail+"'");
+            stmt1.executeUpdate(query1);
+            System.out.println(query1);*/
+            PreparedStatement deleteStmt = cn.prepareStatement("delete from contacts (user_email, friend_email) values(?,?)");
             deleteStmt.setString(1, userEmail);
             deleteStmt.setString(2, receiverEmail);
             deleteStmt.execute();
-            PreparedStatement deleteStmt2 = cn.prepareStatement("delete from contacts (user_email, request_sender) values(?,?)");
+            PreparedStatement deleteStmt2 = cn.prepareStatement("delete from contacts (user_email, friend_email) values(?,?)");
             deleteStmt2.setString(1, receiverEmail);
             deleteStmt2.setString(2, userEmail);
 
             deleteStmt2.execute();
+ 
             flag = 0;
+             cn.close();
         } catch (SQLException ex) {
 
             flag = 1;
         }
+       
         return flag;
     }
+    
+   public static ArrayList<String> getFriendsOfCleint(user cleint){
+       ArrayList<String> friends=new ArrayList<String>();
+       try{
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
+        Statement stmt = con.createStatement();
+          
+        String querystring = new String("select user_email from  contacts where friend_email='" + cleint.getEmail() + "'");
+        ResultSet friendsEmails = stmt.executeQuery(querystring);
+        while(friendsEmails.next()){
+            friends.add(friendsEmails.getString(1));
+        }
+        con.close();
+       }catch(Exception e){
+       
+           e.printStackTrace();
+       }
+      
+       return friends;
+       
+        
+       
+       
+    }
+   public static user getUserDate(String user_email){
+       user Client=null;
+       try{
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
+        Statement stmt = con.createStatement();  
+        String querystring = new String("select * from  user where email='" + user_email + "'");
+        ResultSet userData = stmt.executeQuery(querystring);
+        userData.next();
+        Client=new user();
+        Client.setEmail(user_email);
+        Client.setUserName(userData.getString("user_name"));
+        Client.setFirstName(userData.getString("first_name"));
+        Client.setLastName(userData.getString("last_name"));
+        Client.setStatue(userData.getInt("status"));
+          
+        con.close();
+        
+   }catch(Exception e){
+   
+       e.printStackTrace();
+   }
+      return Client;
+       
+    
+   }
+   public static Vector<user> getFriendRequestsList(user myuser){
+       Vector friend_list = new Vector();
+        try {
 
+            //note the data base name should change according to the used database also username and passward
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
+            Statement stmt = con.createStatement();
+            String querystring = new String("select request_sender from  friend_requests where email='" + myuser.getEmail() + "'");
+          
+            ResultSet friends = stmt.executeQuery(querystring);
+            ResultSet friend_contact;
+            user user;
+
+            while (friends.next()) {
+                querystring = new String("select * from user where email='" + friends.getString(1) + "'");
+                Statement stmt2 = con.createStatement();
+                friend_contact = stmt2.executeQuery(querystring);
+                friend_contact.next();
+                user = new user();
+                user.setFirstName(friend_contact.getString(1));
+                user.setLastName(friend_contact.getString(2));
+                user.setUserName(friend_contact.getString(3));
+                user.setEmail(friend_contact.getString(4));
+                user.setPassward(friend_contact.getString(5));
+                user.setStatue(friend_contact.getInt(6));
+                friend_list.add(user);
+
+            }
+            con.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return friend_list;
+   }
 
 }

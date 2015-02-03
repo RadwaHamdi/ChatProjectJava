@@ -468,6 +468,37 @@ public class Controller implements Serializable {
          }
         return flag;
     }
-    //here is remove friend
+   public int removeFriendClientSide(String userEmail,String friendEmail){
+       int check=2;
+        try {
+          check = obj.removeFriendServerSide(userEmail,friendEmail);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return check;
+   }
+    
+    
+    
+   public  void popUpOnlineCleints(user Client){
+   veiwRef.popUpMessage(Client);
+   
+   }
+   public Vector getFriendRequests(user Cleint){
+       Vector<user> requests=new Vector<user>();
+       Vector friendRequests=new Vector();
+       try{
+       requests=obj.retreiveFriendRequestsList(Cleint);
+       }catch(Exception e){
+           e.printStackTrace();
+       }
+       for(int i=0;i<requests.size();i++){
+           friendRequests.add(requests.get(i).getUserName());
+       
+        }
+       System.out.println(requests.size());
+       System.out.println(friendRequests);
+       return friendRequests;
+   }
     
 }

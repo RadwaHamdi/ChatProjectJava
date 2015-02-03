@@ -32,4 +32,5 @@ public interface ServicesInterface extends Remote{
     public void downloadFileServerSide(File file, byte[] b, int frameId, String email)throws RemoteException;
     int addFriendServerSide(String userEmail, String receiverEmail) throws RemoteException;
     int removeFriendServerSide(String userEmail, String receiverEmail) throws RemoteException;
+    public Vector<user> retreiveFriendRequestsList(user myuser)throws RemoteException;
 }

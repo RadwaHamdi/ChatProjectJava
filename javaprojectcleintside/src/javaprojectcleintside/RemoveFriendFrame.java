@@ -4,23 +4,28 @@
  * and open the template in the editor.
  */
 
-package ui;
+package javaprojectcleintside;
 
+import common.user;
 import java.awt.Point;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author ewess
  */
 public class RemoveFriendFrame extends javax.swing.JFrame {
-
+    Controller controller;
+    user cleint;
     /**
      * Creates new form AddFriendFrame
      */
-    public RemoveFriendFrame(Point point) {
+    public RemoveFriendFrame(Point point,Controller c,user u) {
         initComponents();
         setLocation(point);
         setVisible(true);
+        controller=c;
+        cleint=u;
     }
 
     /**
@@ -50,6 +55,11 @@ public class RemoveFriendFrame extends javax.swing.JFrame {
         jPanel2.setOpaque(false);
 
         removeFriendButton.setText("remove");
+        removeFriendButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeFriendButtonActionPerformed(evt);
+            }
+        });
 
         cancelButton.setText("cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -106,7 +116,6 @@ public class RemoveFriendFrame extends javax.swing.JFrame {
         getContentPane().add(jPanel2);
         jPanel2.setBounds(10, 10, 330, 140);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\ewess\\Desktop\\chat application\\ui\\profile.png")); // NOI18N
         jLabel1.setMaximumSize(new java.awt.Dimension(340, 158));
         jLabel1.setMinimumSize(new java.awt.Dimension(340, 158));
         jLabel1.setName(""); // NOI18N
@@ -121,6 +130,26 @@ public class RemoveFriendFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void removeFriendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeFriendButtonActionPerformed
+        // TODO add your handling code here:
+       int check = controller.removeFriendClientSide(cleint.getEmail(), emailTextField.getText());
+       
+        System.out.println(check);
+        System.out.println(cleint.getEmail());
+        System.out.println(emailTextField.getText());
+       if(check==0){
+            JOptionPane.showMessageDialog(null, "Friend is Removed");
+        }
+       //Here Radwa should Show Messages to use based on her logic !
+       //0??!  
+       //1???!
+       //2??!
+       /* if(check==1){
+            JOptionPane.showMessageDialog(null, "This is wrong email");
+        }
+       */
+    }//GEN-LAST:event_removeFriendButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -152,7 +181,7 @@ public class RemoveFriendFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RemoveFriendFrame(new Point(30, 30)).setVisible(true);
+                //new RemoveFriendFrame(new Point(30, 30)).setVisible(true);
             }
         });
     }

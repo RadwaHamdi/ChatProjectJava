@@ -107,5 +107,8 @@ public class CleintModelInterfaceImplementation extends UnicastRemoteObject impl
                 break; 
         }
     }
+    public void popUpOnlineCleintsClientSide(user onlineFriend){
+        controller.popUpOnlineCleints(onlineFriend);
+    }
     
 }

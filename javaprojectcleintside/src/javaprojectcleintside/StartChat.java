@@ -110,7 +110,7 @@ public class StartChat extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         ArrayList<String> chatMembers=new ArrayList<String>();
         chatMembers.add(jTextField1.getText());
-        chatMembers.add(jTextField2.getText());
+        //chatMembers.add(jTextField2.getText());
         
       //  chatMembers.add(jTextField2.getText());
         //chatMembers.add(jTextField3.getText());

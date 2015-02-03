@@ -51,6 +51,7 @@ import common.CleintVeiwInterface;
 import common.user;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -71,8 +72,8 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
     user cleint;
     JPanel south_panel;
     boolean check_first;
-    
-    public MainFrame(Controller c,Vector<user> contact_list,user current_user)  {
+    Vector contacts;
+    public MainFrame(Controller c,final Vector<user> contact_list,user current_user)  {
         
         try{
             
@@ -108,7 +109,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
             Image chat_Icon = ImageIO.read(getClass().getResource("chat.jpg"));
             Image remove_user_Icon = ImageIO.read(getClass().getResource("remove contact.jpg"));
             Image sign_out_Icon = ImageIO.read(getClass().getResource("sign out.jpg"));
-            Image search_user_Icon = ImageIO.read(getClass().getResource("search.png"));
+            Image search_user_Icon = ImageIO.read(getClass().getResource("friendRequest.jpg"));
             
 
 
@@ -174,7 +175,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
 
 
 
-            Vector contacts=new Vector();
+            contacts=new Vector();
             for(int i=0;i<contactlist.size();i++){
                 contacts.add(contactlist.get(i).getUserName());
             }
@@ -244,10 +245,12 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
 
              chat_Button.addActionListener(new ActionListener() {//remove
                 public void actionPerformed(ActionEvent e) {
-                    StartChat newchat=new StartChat(cleint,controller);
+                   /* StartChat newchat=new StartChat(cleint,controller);
                     newchat.setVisible(true);
                     newchat.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                   //Chat newchat=new Chat();
+                   */
+                   // AddToChat newChat=new AddToChat(new Point(100, 100),contacts,controller);
+                    
                 }
             });
 
@@ -255,7 +258,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
 
              remove_user_Button.addActionListener(new ActionListener() {//remove
                 public void actionPerformed(ActionEvent e) {
-                  // RemoveFriend freind=new RemoveFriend();
+                  RemoveFriendFrame frame=new RemoveFriendFrame(new Point(100, 100),controller,cleint);
                 }
             });
 
@@ -268,7 +271,8 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
             search_user_Button.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("search users");
+                    
+                    FriendRequestFrame freindRequests=new FriendRequestFrame(new Point(100,100), controller, controller.getFriendRequests(cleint));
                 }
             });
             
@@ -404,5 +408,35 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
         }
    
    
+   }
+   public  void popUpMessage(user cleint){
+   
+    try {
+           
+            final JWindow NotificationWindow=new JWindow();
+            JPanel message=new JPanel();
+            message.setBackground(new Color(188, 255, 184));
+            JLabel OnlineFriend=new JLabel(cleint.getUserName()+" is online");       
+            BufferedImage img=ImageIO.read(new File("C:\\Users\\Alaa\\Desktop\\Notify.png"));
+            JLabel image=new  JLabel(new ImageIcon(img));
+            message.add(image);
+            message.add(OnlineFriend);
+            NotificationWindow.add(message);
+            NotificationWindow.setSize(200, 50);
+            NotificationWindow.setLocation(this.getX(), this.getY()+this.getHeight());
+            NotificationWindow.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e){
+                    if(e.getClickCount()==1){
+                        NotificationWindow.dispose();
+                        
+                    }
+                }
+            });
+            
+            NotificationWindow.setVisible(true);
+        }catch(Exception e){
+        
+            e.printStackTrace();
+        }
    }
 }
