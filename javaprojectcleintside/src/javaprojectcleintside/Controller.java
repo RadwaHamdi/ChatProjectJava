@@ -252,6 +252,8 @@ public class Controller implements Serializable {
     public void start_chat_session(ArrayList<String> members) {
         try {
             if (serverstate == true) {
+                System.out.println("user email is : "+newcleint.getEmail());
+                System.out.println("chat receivers are : "+members);
                 int check = obj.startNewChatSessionstr(newcleint.getEmail(), members);
 
                 if (check == -1) {
@@ -554,4 +556,16 @@ public class Controller implements Serializable {
         }
         return check;
     }
+    public Vector<user> getContactList(user myuser){
+        Vector<user> contacts=new Vector<user>();
+    
+        try {
+       contacts=obj.retreiveContactList(myuser);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return contacts;
+    }
+     
+    
 }

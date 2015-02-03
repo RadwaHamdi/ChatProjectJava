@@ -112,7 +112,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
             toolBar.add(add_contact_Button);
             //toolBar.add(contacts_Button);
             toolBar.add(chat_Button);
-            toolBar.add(contacts_Button);
+            //toolBar.add(contacts_Button);
             toolBar.add(remove_user_Button);
             toolBar.add(search_user_Button);
             toolBar.add(sign_out_Button);
@@ -214,11 +214,10 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
 
             chat_Button.addActionListener(new ActionListener() {//remove
                 public void actionPerformed(ActionEvent e) {
-                    /* StartChat newchat=new StartChat(cleint,controller);
-                     newchat.setVisible(true);
-                     newchat.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                     */
-                   // AddToChat newChat=new AddToChat(new Point(100, 100),contacts,controller);
+                    
+                    
+                   AddToChat newChat=new AddToChat(new Point(100, 100),controller,cleint);
+                   
 
                 }
             });

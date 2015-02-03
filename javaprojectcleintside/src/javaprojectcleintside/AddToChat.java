@@ -4,33 +4,37 @@
  * and open the template in the editor.
  */
 
-package  javaprojectcleintside;
+package javaprojectcleintside;
 
 import common.user;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Vector;
-import java.util.logging.Logger;
-import javax.swing.JList;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author ewess
  */
 public class AddToChat extends javax.swing.JFrame {
-Vector contactlist;
-Controller controller;
+    Vector<user> contacts;
+    Vector<String> UsersName;
+    Controller controller;
+    user client;
     /**
      * Creates new form AddToChat
      */
-    public AddToChat(Point point,Vector contact_list) {
+    public AddToChat(Point point,Controller c,user user) {
         initComponents();
         setLocation(point);
-        contactlist=new Vector();
-        
-        contactlist=contact_list;
-       // controller=c;
-        System.out.println(contact_list);
-        System.out.println(contactlist);
+        controller=c;
+        client=user;
+        contacts=controller.getContactList(user);
+        UsersName=new Vector<String>();
+        for(int i=0;i<contacts.size();i++){
+            UsersName.add(contacts.get(i).getUserName());
+        }
+        contactsList.setListData(UsersName);
         setVisible(true);
         
     }
@@ -71,17 +75,6 @@ Controller controller;
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
-        });
-        contactsList=new JList(contactlist);
-        contactsList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                contactsListMousePressed(evt);
-            }
-        });
-        contactsList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                contactsListValueChanged(evt);
-            }
         });
         jScrollPane1.setViewportView(contactsList);
 
@@ -144,23 +137,38 @@ Controller controller;
     }//GEN-LAST:event_jPanel1ComponentMoved
 
     private void startChatButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startChatButtonActionPerformed
-        // TODO add your handling code here:
-        ////////////////////////////new Chat().setVisible(true);
+        System.out.println("inside start chat");
+        ArrayList<String> chatMembers=new ArrayList<String>();
+        ArrayList<String> chatMembersEmails=new ArrayList<String>();
+       try{
+           Object[] members= contactsList.getSelectedValues();
+           for(int i=0;i<members.length;i++){
+               System.out.println(members[i].toString());
+               chatMembers.add(members[i].toString());
+           }
+           for(int i=0;i<chatMembers.size();i++){
+               for(int j=0;j<contacts.size();j++){
+                   System.out.println("inside for loop");
+                   System.out.println("member :"+contacts.get(j).getEmail()+contacts.get(j).getUserName());
+                   if(chatMembers.get(i).equals(contacts.get(j).getUserName())){
+                       chatMembersEmails.add(contacts.get(j).getEmail());
+                      
+                   }
+               }
+           }
+       }catch(Exception e){
+           JOptionPane.showMessageDialog(null, "please select friend from list first");
+       }
+        System.out.println("chat members are : "+chatMembers);
+        System.out.println("chat membersemails are"+chatMembersEmails);
+        controller.start_chat_session(chatMembersEmails);
+        dispose();
     }//GEN-LAST:event_startChatButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
-
-    private void contactsListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_contactsListValueChanged
-    
-    }//GEN-LAST:event_contactsListValueChanged
-
-    private void contactsListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contactsListMousePressed
-        
-        System.out.println(contactsList.getSelectedValue().toString());
-    }//GEN-LAST:event_contactsListMousePressed
 
     /**
      * @param args the command line arguments
@@ -176,12 +184,7 @@ Controller controller;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton startChatButton;
     // End of variables declaration//GEN-END:variables
-
-    public static void main(String[] args) {
-        Vector contacts=new Vector();
-        contacts.add("alaa");
-        contacts.add("hussein");
-        new AddToChat(new Point(200,200),contacts);
-        
+public static void main(String[] args) {
+       
     }
 }
