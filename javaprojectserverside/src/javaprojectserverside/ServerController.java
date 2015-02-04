@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 /**
  *
@@ -98,8 +99,9 @@ public class ServerController  {
         reg.rebind("chatservice", (Remote) obj);
         
         }catch(Exception e){
-            e.printStackTrace();
-          //  JOptionPane.showMessageDialog(null,"Server is already runing");
+          //  e.printStackTrace();
+            JOptionPane.showMessageDialog(null,"Server is already runing");
+            System.exit(0);
            
         }
         

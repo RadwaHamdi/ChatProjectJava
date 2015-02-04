@@ -58,6 +58,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
     JPanel south_panel;
     boolean check_first;
     Vector contacts;
+    Thread t;
 
     public MainFrame(Controller c, final Vector<user> contact_list, user current_user) {
 
@@ -154,12 +155,14 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
 
             final JList names = new JList(contacts);
             names.setCellRenderer(new customlist(contactlist));
-            Thread t=new Thread(new Runnable() {
+            t=new Thread(new Runnable() {
 
                 public void run() {
+                    
                     while(true){
+                        if(controller.serverstate==true){
                     names.setCellRenderer(new customlist(controller.getContactList(cleint)));
-                    revalidate();
+                    revalidate();}
                     }
                 }
             });

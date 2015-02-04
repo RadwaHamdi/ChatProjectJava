@@ -32,6 +32,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu.Separator;
 import javax.swing.ListCellRenderer;
@@ -106,9 +107,12 @@ public class customlist extends JPanel implements ListCellRenderer {
             }
 
                
-            revalidate();
+            
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            JOptionPane.showMessageDialog(null,"Server is Off,cannot load user data!");
+            
+            
         }
            //
          

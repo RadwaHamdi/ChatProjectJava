@@ -464,6 +464,7 @@ public class Controller implements Serializable {
     }
 
     public void uploadFile(int frameId) {
+        if(serverstate==true){
         try {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileView(new FileView() {
@@ -494,12 +495,15 @@ public class Controller implements Serializable {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }}
+        else{
+            JOptionPane.showMessageDialog(null, "Sorry server is Off");
         }
     }
 
     public int addFriendClienSide(String userEmail, String receiverEmail) {
         int flag = 3;
-
+        if(serverstate==true){
         try {
 
             flag = obj.addFriendServerSide(userEmail, receiverEmail);
@@ -507,15 +511,23 @@ public class Controller implements Serializable {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             // flag = 1;
         }
+        }
+        else{
+            JOptionPane.showMessageDialog(null,"Sorry the server is off");
+        }
         return flag;
     }
 
     public int removeFriendClientSide(String userEmail, String friendEmail) {
         int check = 2;
+        if(serverstate==true){
         try {
             check = obj.removeFriendServerSide(userEmail, friendEmail);
         } catch (Exception e) {
             e.printStackTrace();
+        }}
+        else{
+            JOptionPane.showMessageDialog(null,"Sorry Server is off.");
         }
         return check;
     }
@@ -526,44 +538,56 @@ public class Controller implements Serializable {
     }
 
     public Vector getFriendRequests(user Cleint) {
+        
         Vector<user> requests = new Vector<user>();
-
+        if(serverstate==true){
         try {
             requests = obj.retreiveFriendRequestsList(Cleint);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        }else{
+            JOptionPane.showMessageDialog(null, "Sorry server is off ");
+        }
         return requests;
     }
 
     public int acceptFriendRequest(String user_email, String Sender_email) {
         int check = 0;
+        if(serverstate==true){
         try {
             check = obj.acceptFriendServerSide(user_email, Sender_email);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        }else{
+            JOptionPane.showMessageDialog(null,"Sorry Server is off");
         }
         return check;
     }
 
     public int denyFriendRequest(String user_email, String Sender_email) {
         int check = 0;
+        if(serverstate==true){
         try {
             check = obj.denyFriendRequesServerSide(user_email, Sender_email);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        }else{
+            JOptionPane.showMessageDialog(null, "Sorry Server is Off");
+        }
         return check;
     }
     public Vector<user> getContactList(user myuser){
         Vector<user> contacts=new Vector<user>();
-    
+        if(serverstate==true){
         try {
        contacts=obj.retreiveContactList(myuser);
         } catch(Exception e){
            JOptionPane.showMessageDialog(null,"Sorry server is off ");
            System.exit(0);
+        }
         }
         return contacts;
     }
