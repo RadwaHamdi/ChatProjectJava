@@ -116,6 +116,7 @@ public class RemoveFriendFrame extends javax.swing.JFrame {
         getContentPane().add(jPanel2);
         jPanel2.setBounds(10, 10, 330, 140);
 
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/friendRequests.png"))); // NOI18N
         jLabel1.setMaximumSize(new java.awt.Dimension(340, 158));
         jLabel1.setMinimumSize(new java.awt.Dimension(340, 158));
         jLabel1.setName(""); // NOI18N

@@ -109,6 +109,8 @@ public class FriendRequestFrame extends javax.swing.JFrame {
         });
         getContentPane().add(cancelButton);
         cancelButton.setBounds(286, 69, 86, 23);
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/friendRequests.png"))); // NOI18N
         getContentPane().add(jLabel1);
         jLabel1.setBounds(0, 0, 380, 190);
 

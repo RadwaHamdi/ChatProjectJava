@@ -129,6 +129,7 @@ public class AddToChat extends javax.swing.JFrame {
 
         jLabel1.setBackground(new java.awt.Color(51, 102, 255));
         jLabel1.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/AddToChatWindow.png"))); // NOI18N
         getContentPane().add(jLabel1);
         jLabel1.setBounds(0, 0, 270, 360);
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><?xml-stylesheet type="text/xsl" href="src\javaprojectcleintside\ChatXSLT.xsl" ?>
+<chat xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="./schemaChat.xsd">
+    <header>chat</header>
+    <member>Maram@gmail.com</member>
+    <member>Radwa@gmail.com</member>
+    <message>
+        <sender>Maram Osama </sender>
+        <body> nfdkjngfdknhkjd</body>
+    </message>
+    <message>
+        <sender>Radwa Hamdi </sender>
+        <body> dnfdmnfk</body>
+    </message>
+    <message>
+        <sender>Radwa Hamdi</sender>
+        <body>dnfdmnfk</body>
+    </message>
+</chat>

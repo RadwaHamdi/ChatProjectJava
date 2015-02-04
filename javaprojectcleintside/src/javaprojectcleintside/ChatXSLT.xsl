@@ -25,7 +25,7 @@
         </td>
       </tr>
       <tr>
-      <xsl:for-each select="chat/memeber">
+      <xsl:for-each select="chat/member">
       
           
         <td><xsl:value-of select="."/></td>
@@ -33,14 +33,14 @@
       
       </xsl:for-each>
       </tr>
-      <xsl:for-each select="chat/memeber">
+      <xsl:for-each select="chat/message">
       <tr>
           
           <td>
-              <xsl:value-of select="/sender"/>
+              <xsl:value-of select="sender"/>
           </td>
           <td>
-              <xsl:value-of select="/body"/>
+              <xsl:value-of select="body"/>
           </td>
       </tr>
       </xsl:for-each>

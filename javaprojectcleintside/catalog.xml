@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
     <system systemId="file:/C:/Users/Alaa/Desktop/project/Team13/javaprojectcleintside/src/javaprojectcleintside/Config_schema.xsd" uri="xml-resources/jaxb/configuration/Config_schema.xsd"/>
+    <system systemId="file:/C:/Users/Radwa/Desktop/Team13/javaprojectcleintside/src/javaprojectcleintside/chatSchema.xsd" uri="xml-resources/jaxb/schemaBinding/chatSchema.xsd"/>
 </catalog>

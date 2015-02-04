@@ -7,6 +7,7 @@ package javaprojectcleintside;
 import common.*;
 import demo.Configuration;
 import demo.ObjectFactory;
+import java.awt.Point;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -42,7 +43,7 @@ import javax.xml.bind.Unmarshaller;
  * @author Alaa
  */
 public class Controller implements Serializable {
-
+    static String  serverIp;
     CleintModelInterface model;
     CleintVeiwInterface veiw;
     MainFrame veiwRef;
@@ -54,13 +55,19 @@ public class Controller implements Serializable {
     SignUp signUpView;
     Registry reg;
     boolean serverstate = true;
+    static boolean startserver=false;
 
     CleintModelInterfaceImplementation userref;
 
     HashMap<Integer, ArrayList<String>> sessions;
     HashMap<Integer,ArrayList<String[]>> history;
-    public Controller() throws RemoteException {
-
+    public Controller(String ip) throws RemoteException {
+        
+       serverIp=ip;
+        
+       
+        
+      
         JAXBContext context;
         try {
 
@@ -70,7 +77,7 @@ public class Controller implements Serializable {
             System.out.println("email: " + config.getEmail());
             System.out.println("signed value: " + config.getSigned());
             if (config.getSigned() == 0) {
-                reg = LocateRegistry.getRegistry("127.0.0.1", 5005);
+                reg = LocateRegistry.getRegistry(serverIp, 5005);
                 obj = (ServicesInterface) reg.lookup("chatservice");
                 serverstate = obj.checkServerState();
                 user u = obj.getUser(config.getEmail());
@@ -88,7 +95,7 @@ public class Controller implements Serializable {
                 history = new HashMap<Integer, ArrayList<String[]>>();
                 try {
 
-                    reg = LocateRegistry.getRegistry("127.0.0.1", 5005);
+                    reg = LocateRegistry.getRegistry(serverIp, 5005);
                     obj = (ServicesInterface) reg.lookup("chatservice");
                     serverstate = obj.checkServerState();
 
@@ -97,17 +104,16 @@ public class Controller implements Serializable {
                     System.exit(0);
                 }
             }
-        } catch (JAXBException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotBoundException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (AccessException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Server is off");
+                    System.exit(0);
         }
-
+      
+        
 //            Mymessage myMessage = (Mymessage) unmarsh.unmarshal(new File(mypackage + "intro.xml"));
         //   Mymessage message = (Mymessage)JAXBMessage.getValue();
-    }
+        
+        }
 
     public void signInClientSide() {
 
@@ -217,16 +223,7 @@ public class Controller implements Serializable {
 
     }
 
-    public static void main(String[] args) {
-
-        try {
-            Controller c = new Controller();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
+   
 
     public int setStatus(String email, int status) {
         int inserted = 0;
@@ -277,16 +274,16 @@ public class Controller implements Serializable {
                 String []temp = new String[2];
                 temp[0] = newcleint.getUserName();
                 temp[1] = message;
-                if(history.get(chat_id)==null){
-                    ArrayList<String[]> t = new ArrayList<String[]>();
-                    t.add(temp);
-                    history.put(chat_id, t);
-                }
-                else{
-                    ArrayList<String[]> t = history.get(chat_id);
-                    t.add(temp);
-                    history.put(chat_id, t);
-                }
+//                if(history.get(chat_id)==null){
+//                    ArrayList<String[]> t = new ArrayList<String[]>();
+//                    t.add(temp);
+//                    history.put(chat_id, t);
+//                }
+//                else{
+//                    ArrayList<String[]> t = history.get(chat_id);
+//                    t.add(temp);
+//                    history.put(chat_id, t);
+//                }
             } else {
                 JOptionPane.showMessageDialog(null, "Sorry Server is off");
             }
@@ -700,7 +697,7 @@ public class Controller implements Serializable {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 //            marshaller.setProperty(Marshaller.JAXB_NO_NAMESPACE_SCHEMA_LOCATION, "src\\javaprojectclientside\\chatSchema.xsd");
             marshaller.setProperty(Marshaller.JAXB_NO_NAMESPACE_SCHEMA_LOCATION, "./schemaChat.xsd");
-            marshaller.setProperty("com.sun.xml.internal.bind.xmlHeaders", "<?xml-stylesheet type=\"text/xsl\" href=\"src\\projectchatsave\\ChatXSLT.xsl\" ?>");
+            marshaller.setProperty("com.sun.xml.internal.bind.xmlHeaders", "<?xml-stylesheet type=\"text/xsl\" href=\"src\\javaprojectcleintside\\ChatXSLT.xsl\" ?>");
             marshaller.marshal(chat, new FileOutputStream(fileName));
 //            marshaller.marshal(chat, new FileOutputStream("lll.xml"));
             
@@ -721,4 +718,5 @@ public class Controller implements Serializable {
         }
         
     }
+    
 }
