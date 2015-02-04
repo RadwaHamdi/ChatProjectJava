@@ -89,7 +89,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
             toolBar.setBackground(new Color(0, 107, 172));
             JPanel toolbar_panel = new JPanel(new BorderLayout());
             Image add_user_Icon = ImageIO.read(getClass().getResource("add.png"));
-            Image contacts_Icon = ImageIO.read(getClass().getResource("images.jpg"));
+            Image contacts_Icon = ImageIO.read(getClass().getResource("search.png"));
             Image chat_Icon = ImageIO.read(getClass().getResource("chat.jpg"));
             Image remove_user_Icon = ImageIO.read(getClass().getResource("remove contact.jpg"));
             Image sign_out_Icon = ImageIO.read(getClass().getResource("sign out.jpg"));
@@ -116,6 +116,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
             //toolBar.add(contacts_Button);
             toolBar.add(remove_user_Button);
             toolBar.add(search_user_Button);
+            toolBar.add(contacts_Button);
             toolBar.add(sign_out_Button);
 
             toolbar_panel.add("North", toolBar);
@@ -130,6 +131,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
             states_combobox.setRenderer(new customcombobox());
 
             JLabel user_name = new JLabel(cleint.getUserName() + "   ");
+            user_name.setForeground(new Color(248,248,248));
             user_name.setFont(new Font("Aharoni", Font.BOLD, 18));
 
             combobox_panel.add("Center", user_name);
@@ -221,7 +223,7 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
 
             contacts_Button.addActionListener(new ActionListener() {//remove
                 public void actionPerformed(ActionEvent e) {
-                    StartChatGroup newgroup = new StartChatGroup();
+                    System.out.println("search fro users in future work");
                 }
             });
 

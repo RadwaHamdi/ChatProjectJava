@@ -126,6 +126,9 @@ public class AddToChat extends javax.swing.JFrame {
         });
         getContentPane().add(cancelButton);
         cancelButton.setBounds(60, 320, 81, 23);
+
+        jLabel1.setBackground(new java.awt.Color(51, 102, 255));
+        jLabel1.setForeground(new java.awt.Color(51, 51, 51));
         getContentPane().add(jLabel1);
         jLabel1.setBounds(0, 0, 270, 360);
 
