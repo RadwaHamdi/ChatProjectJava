@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+    <xs:element name="chat">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="header" type = "simple" default = "Chat History"/>  
+                <xs:element name="member" minOccurs = "2" maxOccurs = "unbounded" type = "xs:string">  </xs:element>
+                <xs:element name = "message" minOccurs = "2" maxOccurs = "unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name = "sender" type = "simple"/>
+                            <xs:element name = "body">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute name="size" type="xs:integer" default="14"/>
+                                            <xs:attribute name="type" type="xs:string" default="Arial"/>
+                                            <xs:attribute name="color" type="xs:string" default="BLACK"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                    
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+        
+    </xs:element>
+    <xs:simpleType name="simple">
+        <xs:restriction base="xs:string"/> 
+    </xs:simpleType>
+
+</xs:schema>

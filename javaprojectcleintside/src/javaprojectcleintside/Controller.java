@@ -20,6 +20,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,7 +58,7 @@ public class Controller implements Serializable {
     CleintModelInterfaceImplementation userref;
 
     HashMap<Integer, ArrayList<String>> sessions;
-
+    HashMap<Integer,ArrayList<String[]>> history;
     public Controller() throws RemoteException {
 
         JAXBContext context;
@@ -83,7 +85,7 @@ public class Controller implements Serializable {
                 signInView = new SignIn(this);
                 model = new CleintModelInterfaceImplementation(this);
                 sessions = new HashMap<Integer, ArrayList<String>>();
-
+                history = new HashMap<Integer, ArrayList<String[]>>();
                 try {
 
                     reg = LocateRegistry.getRegistry("127.0.0.1", 5005);
@@ -272,6 +274,19 @@ public class Controller implements Serializable {
 
             if (serverstate == true) {
                 obj.sendMessagetoserver(newcleint.getUserName() + " : " + message, chat_id);
+                String []temp = new String[2];
+                temp[0] = newcleint.getUserName();
+                temp[1] = message;
+                if(history.get(chat_id)==null){
+                    ArrayList<String[]> t = new ArrayList<String[]>();
+                    t.add(temp);
+                    history.put(chat_id, t);
+                }
+                else{
+                    ArrayList<String[]> t = history.get(chat_id);
+                    t.add(temp);
+                    history.put(chat_id, t);
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Sorry Server is off");
             }
@@ -288,14 +303,28 @@ public class Controller implements Serializable {
         for (int i = 0; i < chats.size(); i++) {
             if (chat_id == chats.get(i).getFrameID()) {
                 chats.get(i).displaymessageontextarea(message);
+                StringTokenizer st = new StringTokenizer(message,":");
+                String[] temp = new String[2];
+                temp[0] = st.nextToken();
+                temp[1] = st.nextToken();
+                if(history.get(chat_id)==null){
+                    ArrayList<String[]> t = new ArrayList<String[]>();
+                    t.add(temp);
+                    history.put(chat_id, t);
+                }
+                else{
+                    ArrayList<String[]> t = history.get(chat_id);
+                    t.add(temp);
+                    history.put(chat_id, t);
+                }
             }
         }
     }
-
     public void closechatsession(int chat_id) {
         for (int i = 0; i < chats.size(); i++) {
             if (chats.get(i).getFrameID() == chat_id) {
                 chats.remove(i);
+                history.remove(i);
                 break;
             }
         }
@@ -592,5 +621,104 @@ public class Controller implements Serializable {
         return contacts;
     }
      
-    
+    public void saveChat(int chat_id,String fileName) {
+        FileOutputStream schemaFile = null ;
+        try {
+            String schema = ""
+                    + "<?xml version=\"1.0\"?>\n" +
+                    "<!--\n" +
+                    "To change this license header, choose License Headers in Project Properties.\n" +
+                    "To change this template file, choose Tools | Templates\n" +
+                    "and open the template in the editor.\n" +
+                    "-->\n" +
+                    "\n" +
+                    "<xs:schema version=\"1.0\"\n" +
+                    "           xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n" +
+                    "           elementFormDefault=\"qualified\">\n" +
+                    "    <xs:element name=\"chat\">\n" +
+                    "        <xs:complexType>\n" +
+                    "            <xs:sequence>\n" +
+                    "                <xs:element name=\"header\" type = \"simple\" default = \"Chat History\"/>  \n" +
+                    "                <xs:element name=\"member\" minOccurs = \"2\" maxOccurs = \"unbounded\" type = \"xs:string\">  </xs:element>\n" +
+                    "                <xs:element name = \"message\" minOccurs = \"2\" maxOccurs = \"unbounded\">\n" +
+                    "                    <xs:complexType>\n" +
+                    "                        <xs:sequence>\n" +
+                    "                            <xs:element name = \"sender\" type = \"simple\"/>\n" +
+                    "                            <xs:element name = \"body\">\n" +
+                    "                                <xs:complexType>\n" +
+                    "                                    <xs:simpleContent>\n" +
+                    "                                        <xs:extension base=\"xs:string\">\n" +
+                    "                                            <xs:attribute name=\"size\" type=\"xs:integer\" default=\"14\"/>\n" +
+                    "                                            <xs:attribute name=\"type\" type=\"xs:string\" default=\"Arial\"/>\n" +
+                    "                                            <xs:attribute name=\"color\" type=\"xs:string\" default=\"BLACK\"/>\n" +
+                    "                                        </xs:extension>\n" +
+                    "                                    </xs:simpleContent>\n" +
+                    "                                    \n" +
+                    "                                </xs:complexType>\n" +
+                    "                            </xs:element>\n" +
+                    "                        </xs:sequence>\n" +
+                    "                    </xs:complexType>\n" +
+                    "                </xs:element>\n" +
+                    "            </xs:sequence>\n" +
+                    "        </xs:complexType>\n" +
+                    "        \n" +
+                    "    </xs:element>\n" +
+                    "    <xs:simpleType name=\"simple\">\n" +
+                    "        <xs:restriction base=\"xs:string\"/> \n" +
+                    "    </xs:simpleType>\n" +
+                    "\n" +
+                    "</xs:schema>\n" ;
+            
+            File schemaXSD = new File("./schemaChat.xsd");
+            schemaFile = new FileOutputStream(schemaXSD);
+            
+            ArrayList <String[]> chatHistory = history.get(chat_id);
+            try {
+                JAXBContext context = JAXBContext.newInstance("generated");
+                File file = new File(fileName);
+                generated.ObjectFactory factory = new generated.ObjectFactory();
+                generated.Chat chat = factory.createChat();
+                chat.setHeader("chat");
+                
+                List <String> people = chat.getMember();
+                ArrayList<String> chatMembers = sessions.get(chat_id);
+                for (String chatmember : chatMembers) {
+                    people.add(chatmember);
+                }
+                List <generated.Chat.Message> messages = chat.getMessage();
+                for (int i = 0; i < chatHistory.size(); i++) {
+                    generated.Chat.Message msg = new generated.Chat.Message() ;
+                    msg.setSender(chatHistory.get(i)[0]);
+                    generated.Chat.Message.Body body = new generated.Chat.Message.Body();
+                    body.setValue(chatHistory.get(i)[1]);
+                    msg.setBody(body);
+                    messages.add(msg);
+                }
+                
+                
+                Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+//            marshaller.setProperty(Marshaller.JAXB_NO_NAMESPACE_SCHEMA_LOCATION, "src\\javaprojectclientside\\chatSchema.xsd");
+            marshaller.setProperty(Marshaller.JAXB_NO_NAMESPACE_SCHEMA_LOCATION, "./schemaChat.xsd");
+            marshaller.setProperty("com.sun.xml.internal.bind.xmlHeaders", "<?xml-stylesheet type=\"text/xsl\" href=\"src\\projectchatsave\\ChatXSLT.xsl\" ?>");
+            marshaller.marshal(chat, new FileOutputStream(fileName));
+//            marshaller.marshal(chat, new FileOutputStream("lll.xml"));
+            
+        } catch (JAXBException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                schemaFile.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+    }
 }

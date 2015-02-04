@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<chat
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="chatSchema.xsd">
+    <header>Chat</header>
+    <member>radwa </member>
+    <member>amal </member>
+    <message>
+        <sender> radwa </sender>
+        <body size = "14" type = "Arial" color = "black">body of any message</body>
+    </message>
+    <message>
+        <sender> amal </sender>
+        <body>body of any message2</body>
+    </message>
+</chat>

@@ -110,5 +110,8 @@ public class CleintModelInterfaceImplementation extends UnicastRemoteObject impl
     public void popUpOnlineCleintsClientSide(user onlineFriend){
         controller.popUpOnlineCleints(onlineFriend);
     }
+    public void saveChatModel(int chat_id,String fileName){
+        controller.saveChat(chat_id,fileName);
+    }
     
 }
