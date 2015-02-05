@@ -163,8 +163,16 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
                     
                     while(true){
                         if(controller.serverstate==true){
-                    names.setCellRenderer(new customlist(controller.getContactList(cleint)));
-                    revalidate();}
+                            
+                           Vector<user> contacts=controller.getContactList(cleint);
+                           Vector<String> userNames=new Vector<String>();
+                           for (int i = 0; i < contacts.size(); i++) {
+                           userNames.add(contacts.get(i).getUserName());
+                             }
+                            names.setListData(userNames);
+                            names.setCellRenderer(new customlist(contacts));
+                            revalidate();
+                        }
                     }
                 }
             });
@@ -302,6 +310,8 @@ public class MainFrame extends javax.swing.JFrame implements CleintVeiwInterface
                     marshal.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, mypackage);
                     marshal.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                     marshal.marshal(conf, new File("C:\\Users\\Alaa\\Desktop\\project\\ConfigurationFile.xml"));
+                    controller.unRegisterCleint();
+                    
                 } catch (JAXBException ex) {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }

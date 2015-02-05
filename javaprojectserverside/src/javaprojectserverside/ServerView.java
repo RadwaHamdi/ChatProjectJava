@@ -22,6 +22,7 @@ public class ServerView extends javax.swing.JFrame {
     public ServerView(ServerController c) {
         initComponents();
         controller=c;
+        setResizable(false);
         setVisible(true);
         
     }
