@@ -23,6 +23,9 @@ public class RemoveFriendFrame extends javax.swing.JFrame {
     public RemoveFriendFrame(Point point,Controller c,user u) {
         initComponents();
         setLocation(point);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setSize(343, 173);
+        setResizable(false);
         setVisible(true);
         controller=c;
         cleint=u;
@@ -45,9 +48,8 @@ public class RemoveFriendFrame extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(340, 158));
-        setUndecorated(true);
         getContentPane().setLayout(null);
 
         jPanel2.setMaximumSize(new java.awt.Dimension(384, 140));
@@ -91,10 +93,10 @@ public class RemoveFriendFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(99, 99, 99)
-                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(removeFriendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(87, 87, 87)
+                        .addComponent(removeFriendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 65, Short.MAX_VALUE))
         );

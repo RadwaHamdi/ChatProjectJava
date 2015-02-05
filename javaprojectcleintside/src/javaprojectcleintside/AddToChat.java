@@ -35,6 +35,10 @@ public class AddToChat extends javax.swing.JFrame {
             UsersName.add(contacts.get(i).getUserName());
         }
         contactsList.setListData(UsersName);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setSize(278, 382);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setResizable(false);
         setVisible(true);
         
     }
@@ -57,9 +61,9 @@ public class AddToChat extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setMaximumSize(new java.awt.Dimension(270, 360));
         setMinimumSize(new java.awt.Dimension(270, 360));
-        setUndecorated(true);
         setPreferredSize(new java.awt.Dimension(270, 360));
         getContentPane().setLayout(null);
 
@@ -116,20 +120,24 @@ public class AddToChat extends javax.swing.JFrame {
             }
         });
         getContentPane().add(startChatButton);
-        startChatButton.setBounds(150, 320, 79, 23);
+        startChatButton.setBounds(50, 320, 79, 23);
 
         cancelButton.setText("cancel");
+        cancelButton.setBorderPainted(false);
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
         getContentPane().add(cancelButton);
-        cancelButton.setBounds(60, 320, 81, 23);
+        cancelButton.setBounds(140, 320, 81, 23);
 
         jLabel1.setBackground(new java.awt.Color(51, 102, 255));
         jLabel1.setForeground(new java.awt.Color(51, 51, 51));
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/AddToChatWindow.png"))); // NOI18N
+        jLabel1.setAutoscrolls(true);
+        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jLabel1.setDoubleBuffered(true);
         getContentPane().add(jLabel1);
         jLabel1.setBounds(0, 0, 270, 360);
 

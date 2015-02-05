@@ -82,14 +82,20 @@ public class ServerIp extends javax.swing.JFrame {
         jPanel2.setMinimumSize(new java.awt.Dimension(384, 140));
         jPanel2.setOpaque(false);
 
+        addFriendButton.setBackground(new java.awt.Color(0, 132, 209));
+        addFriendButton.setForeground(new java.awt.Color(255, 255, 255));
         addFriendButton.setText("Ok");
+        addFriendButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         addFriendButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addFriendButtonActionPerformed(evt);
             }
         });
 
+        cancelButton.setBackground(new java.awt.Color(0, 132, 209));
+        cancelButton.setForeground(new java.awt.Color(255, 255, 255));
         cancelButton.setText("cancel");
+        cancelButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);

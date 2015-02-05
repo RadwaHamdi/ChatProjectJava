@@ -139,8 +139,8 @@ public class ServerGUI extends JFrame{
         JButton startServiceButton = new JButton("start service");
         JButton stopServiceButton = new JButton("stop service");
         JButton updateStatisticsButton = new JButton("update statistics ");
-        buttonsPanel.add(startServiceButton);
-        buttonsPanel.add(stopServiceButton);
+        //buttonsPanel.add(startServiceButton);
+        //buttonsPanel.add(stopServiceButton);
         buttonsPanel.add(updateStatisticsButton);
 
         updateStatisticsButton.addActionListener(new ActionListener() {

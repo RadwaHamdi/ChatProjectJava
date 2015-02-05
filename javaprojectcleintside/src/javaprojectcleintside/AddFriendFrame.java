@@ -7,7 +7,10 @@
 package javaprojectcleintside;
 
 import common.user;
+import java.awt.Color;
 import java.awt.Point;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.JOptionPane;
 
 /**
@@ -23,9 +26,12 @@ user cleint;
     public AddFriendFrame(Point point,Controller c,user u) {
         initComponents();
         setLocation(point);
-        setVisible(true);
         controller=c;
         cleint=u;
+        setResizable(false);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setVisible(true);
+        
     }
 
     /**
@@ -57,6 +63,7 @@ user cleint;
         jPanel2.setOpaque(false);
 
         addFriendButton.setText("add");
+        addFriendButton.setBorder(null);
         addFriendButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addFriendButtonActionPerformed(evt);
@@ -64,6 +71,7 @@ user cleint;
         });
 
         cancelButton.setText("cancel");
+        cancelButton.setBorder(null);
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
@@ -93,10 +101,10 @@ user cleint;
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(105, 105, 105)
-                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(addFriendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(87, 87, 87)
+                        .addComponent(addFriendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 65, Short.MAX_VALUE))
         );
@@ -108,16 +116,17 @@ user cleint;
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(emailTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 14, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelButton)
-                    .addComponent(addFriendButton))
+                    .addComponent(addFriendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
         getContentPane().add(jPanel2);
         jPanel2.setBounds(10, 10, 330, 140);
 
+        jLabel1.setBackground(new java.awt.Color(0, 132, 209));
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/friendRequests.png"))); // NOI18N
         jLabel1.setMaximumSize(new java.awt.Dimension(340, 158));
         jLabel1.setMinimumSize(new java.awt.Dimension(340, 158));

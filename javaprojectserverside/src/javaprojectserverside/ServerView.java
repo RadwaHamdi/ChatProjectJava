@@ -22,7 +22,6 @@ public class ServerView extends javax.swing.JFrame {
     public ServerView(ServerController c) {
         initComponents();
         controller=c;
-        setBackground(Color.yellow);
         setVisible(true);
         
     }
@@ -82,33 +81,34 @@ public class ServerView extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(134, 134, 134)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(send_adverisements)
-                            .addComponent(online_users, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
-                            .addComponent(Stop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(Start, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(173, 173, 173)
-                        .addComponent(jLabel1)))
-                .addContainerGap(154, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(send_adverisements, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(online_users, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Stop, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(129, 129, 129)
+                            .addComponent(jLabel1)
+                            .addGap(43, 43, 43))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(90, 90, 90)
+                            .addComponent(Start, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(31, 31, 31)
-                .addComponent(Start)
-                .addGap(28, 28, 28)
-                .addComponent(Stop)
-                .addGap(30, 30, 30)
-                .addComponent(online_users)
-                .addGap(29, 29, 29)
-                .addComponent(send_adverisements)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(Start, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(Stop, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(online_users, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(send_adverisements, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         pack();

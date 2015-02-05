@@ -29,6 +29,9 @@ public class SignIn extends javax.swing.JFrame {
     SignUp signUpView;
 
 Controller controller ; 
+public SignIn(){
+    setResizable(false);
+}
 
     public JTextField getEmailTextField() {
         return emailTextField;

@@ -32,6 +32,7 @@ public class SignUp extends javax.swing.JFrame {
      */
     public SignUp(Controller c ) {
         initComponents();
+        setResizable(false);
         setVisible(true);
         this.controller = c ; 
         addWindowListener(new WindowListener() {

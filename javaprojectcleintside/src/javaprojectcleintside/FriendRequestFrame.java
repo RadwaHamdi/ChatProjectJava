@@ -39,8 +39,9 @@ public class FriendRequestFrame extends javax.swing.JFrame {
         friend_requests=friendRequests;
         controller=c;
         friendRequestsList.setListData(requests);
-        
-                
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setSize(382, 192);
+        setResizable(false);   
         setVisible(true);
     }
 
@@ -102,15 +103,17 @@ public class FriendRequestFrame extends javax.swing.JFrame {
         denyButton.setBounds(286, 40, 86, 23);
 
         cancelButton.setText("cancel");
+        cancelButton.setBorder(null);
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
         getContentPane().add(cancelButton);
-        cancelButton.setBounds(286, 69, 86, 23);
+        cancelButton.setBounds(286, 69, 86, 20);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/friendRequests.png"))); // NOI18N
+        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         getContentPane().add(jLabel1);
         jLabel1.setBounds(0, 0, 380, 190);
 
