@@ -83,7 +83,7 @@ public class Chat extends javax.swing.JFrame {
             
             Border roundedBorder = new LineBorder(Color.LIGHT_GRAY, 5, true);
             jTextArea1.setBorder(new RoundedBorder(10));
-            jButton1.setBorder(new RoundedBorder(10));
+            //jButton1.setBorder(new RoundedBorder(10));
             jTextField1.setBorder(new RoundedBorder(15));
             //jButton2.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("add_.jpg"))));
             setVisible(true);
@@ -93,6 +93,7 @@ public class Chat extends javax.swing.JFrame {
                 public void windowOpened(WindowEvent e) {
                 }
 
+                
                 public void windowClosing(WindowEvent e) {
                     controller.closechatsession(frame_id);
                 }
