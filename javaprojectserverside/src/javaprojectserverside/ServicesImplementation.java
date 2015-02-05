@@ -151,11 +151,15 @@ public class ServicesImplementation extends UnicastRemoteObject implements Servi
             }
             for (int i = 0; i < receiverEmails.size(); i++) {
                 int j;
+                 System.out.println(receiverEmails.get(i));
+                 System.out.println("chat_id is :"+ServerController.counter);
+                 System.out.println("online users are :"+online_users);
                 for (j = 0; j < online_users.size(); j++) {
                     if (online_users.get(j).equals(receiverEmails.get(i))) {
                         System.out.println("openchatwindow");
                         cleints_with_email.get(receiverEmails.get(i)).openChatWindow(receiverEmails, ServerController.counter);
-                        System.out.println(receiverEmails.get(i));
+                       
+                        
                     }
                 }
             }

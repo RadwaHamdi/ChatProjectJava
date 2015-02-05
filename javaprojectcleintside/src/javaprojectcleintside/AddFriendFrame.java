@@ -159,9 +159,11 @@ user cleint;
             JOptionPane.showMessageDialog(null, "This is wrong email");
         }
         if(check==2){
-            JOptionPane.showMessageDialog(null, "You already sent arequest to tjis user before");
+            JOptionPane.showMessageDialog(null, "You already sent a request to this user before");
         }
-        
+        if(check == 3){
+            JOptionPane.showMessageDialog(null, "You already have this user as a friend");
+        }
        
     }//GEN-LAST:event_addFriendButtonActionPerformed
 

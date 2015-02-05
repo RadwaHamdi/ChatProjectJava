@@ -94,6 +94,7 @@ public class ServerController  {
         try{
         sessions_ids=new HashMap<Integer, ArrayList<String>>();
         counter=0;
+        System.setProperty("java.rmi.server.hostname", "10.145.208.119");
         obj=new ServicesImplementation(this);
         reg=LocateRegistry.createRegistry(5005);
         reg.rebind("chatservice", (Remote) obj);

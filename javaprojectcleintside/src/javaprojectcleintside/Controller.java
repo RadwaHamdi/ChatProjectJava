@@ -84,6 +84,9 @@ public class Controller implements Serializable {
                 veiwRef = new MainFrame(this, obj.retreiveContactList(u), u);
                 veiw = veiwRef;
                 newcleint = u;
+                model = new CleintModelInterfaceImplementation(this);
+                sessions = new HashMap<Integer, ArrayList<String>>();
+                history = new HashMap<Integer, ArrayList<String[]>>();
                 userref = new CleintModelInterfaceImplementation(this);
                 obj.registerCleint(userref, u.getEmail());
 
@@ -349,6 +352,9 @@ public class Controller implements Serializable {
             if (serverstate == true) {
                 obj.unRegisterCleintServerSide(newcleint, userref);
                 veiwRef.dispose();
+                for(int i=0;i<chats.size();i++){
+                    chats.get(i).dispose();
+                }
                 SignIn logInAgain = new SignIn(this);
 
                 try {

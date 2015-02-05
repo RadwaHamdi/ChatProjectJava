@@ -23,11 +23,11 @@ public class DatabaseConnection {
     /**
      * @param args the command line arguments
      */
-  public static void main(String[] args) {
-     insertContact("Maram@gmail.com", "alaarady93@gmail.com");
-     
-      
+    public static void main(String[] args) {
+        insertContact("Maram@gmail.com", "alaarady93@gmail.com");
+
     }
+
     public static Vector<user> retreiveContactList(user myuser) {
         Vector contact_list = new Vector();
         try {
@@ -85,9 +85,8 @@ public class DatabaseConnection {
     }
 
     public static int InsertInUserTable(String first_name, String last_name, String user_name, String email, String password, int status) {
-        int check=-1;
+        int check = -1;
         try {
-               
 
             String queryString = new String("insert into user values ('" + first_name + "','" + last_name + "','" + user_name + "','" + email + "','" + password + "'," + status + ")");
             System.out.println(queryString);
@@ -97,7 +96,7 @@ public class DatabaseConnection {
             java.sql.Statement stmt = conn.createStatement();
             stmt.executeUpdate(queryString);
             conn.close();
-            check=0;
+            check = 0;
             return check;
 
         } catch (Exception ex) {
@@ -145,6 +144,7 @@ public class DatabaseConnection {
         }
         return u;
     }
+
     public static int insertFriendRequests(String userEmail, String receiverEmail) {
         /**
          *
@@ -153,9 +153,9 @@ public class DatabaseConnection {
          * that the user has already sent a request to the receiver
          */
         int flag = 0;
-        Connection cn=null;
+        Connection cn = null;
         try {
-              cn = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
+            cn = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
 
             ResultSet rs = cn.createStatement().executeQuery("select * from friend_requests where email = '" + receiverEmail + "' and request_sender = '" + userEmail + "'");
             rs.next();
@@ -166,48 +166,79 @@ public class DatabaseConnection {
         } catch (SQLException ex) {
 
             try {
-                ResultSet rs = cn.createStatement().executeQuery("select * from user where email = '" + receiverEmail + "'");
 
+                ResultSet rs = cn.createStatement().executeQuery("select * from contacts where user_email = '" + receiverEmail + "' and friend_email = '" + userEmail + "'");
                 rs.next();
                 rs.getString(1);
                 rs.getString(2);
-                rs.getString(3);
-                rs.getString(4);
+                ResultSet rs2 = cn.createStatement().executeQuery("select * from contacts where user_email = '" + userEmail + "' and friend_email = '" + receiverEmail + "'");
+                rs2.next();
+                rs2.getString(1);
+                rs2.getString(2);
+                flag = 3;
+            } catch (SQLDataException e) {
+                try {
+                    ResultSet rs = cn.createStatement().executeQuery("select * from user where email = '" + receiverEmail + "'");
 
-                PreparedStatement insertStmt = cn.prepareStatement("insert into friend_requests (email, request_sender) values(?,?)");
-                insertStmt.setString(1, receiverEmail);
-                insertStmt.setString(2, userEmail);
-                insertStmt.execute();
-                flag = 0;
-                cn.close();
+                    rs.next();
+                    rs.getString(1);
+                    rs.getString(2);
+                    rs.getString(3);
+                    rs.getString(4);
 
-            } catch (SQLException e) {
+                    PreparedStatement insertStmt = cn.prepareStatement("insert into friend_requests (email, request_sender) values(?,?)");
+                    insertStmt.setString(1, receiverEmail);
+                    insertStmt.setString(2, userEmail);
+                    insertStmt.execute();
+                    flag = 0;
+                    cn.close();
 
-                flag = 1;
+                } catch (SQLException e1) {
+
+                    flag = 1;
+                }
+            } catch (SQLException ex1) {
+                try {
+                    ResultSet rs = cn.createStatement().executeQuery("select * from user where email = '" + receiverEmail + "'");
+
+                    rs.next();
+                    rs.getString(1);
+                    rs.getString(2);
+                    rs.getString(3);
+                    rs.getString(4);
+
+                    PreparedStatement insertStmt = cn.prepareStatement("insert into friend_requests (email, request_sender) values(?,?)");
+                    insertStmt.setString(1, receiverEmail);
+                    insertStmt.setString(2, userEmail);
+                    insertStmt.execute();
+                    flag = 0;
+                    cn.close();
+
+                } catch (SQLException e1) {
+
+                    flag = 1;
+                }
             }
-
         }
-        
+
         return flag;
 
     }
-    
-    
-    
+
     public static int deleteFromContact(String userEmail, String receiverEmail) {
         int flag = 2;
-         Connection cn=null;
+        Connection cn = null;
         try {
             cn = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
-           /* Statement stmt=cn.createStatement();
-            String query=new String("delete from contacts where user_email='"+userEmail+"' and friend_email='"+receiverEmail+"'");
-            System.out.println(query);
-            stmt.executeUpdate(query);
-            Statement stmt1=cn.createStatement();
-            String query1=new String("delete from contacts  where friend_email='"+receiverEmail+"' and user_email='"+userEmail+"'");
-            stmt1.executeUpdate(query1);
-            System.out.println(query1);*/
-            PreparedStatement deleteStmt = cn.prepareStatement("delete from contacts (user_email, friend_email) values(?,?)");
+            Statement stmt=cn.createStatement();
+             String query=new String("delete from contacts where user_email='"+userEmail+"' and friend_email='"+receiverEmail+"'");
+             System.out.println(query);
+             stmt.executeUpdate(query);
+             Statement stmt1=cn.createStatement();
+             String query1=new String("delete from contacts  where friend_email='"+userEmail+"' and user_email='"+receiverEmail+"'");
+             stmt1.executeUpdate(query1);
+             System.out.println(query1);
+           /* PreparedStatement deleteStmt = cn.prepareStatement("delete from contacts (user_email, friend_email) values(?,?)");
             deleteStmt.setString(1, userEmail);
             deleteStmt.setString(2, receiverEmail);
             deleteStmt.execute();
@@ -216,74 +247,72 @@ public class DatabaseConnection {
             deleteStmt2.setString(2, userEmail);
 
             deleteStmt2.execute();
- 
+            */
             flag = 0;
-             cn.close();
+            cn.close();
         } catch (SQLException ex) {
 
             flag = 1;
         }
-       
+
         return flag;
     }
-    
-   public static ArrayList<String> getFriendsOfCleint(user cleint){
-       ArrayList<String> friends=new ArrayList<String>();
-       try{
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
-        Statement stmt = con.createStatement();
-          
-        String querystring = new String("select user_email from  contacts where friend_email='" + cleint.getEmail() + "'");
-        ResultSet friendsEmails = stmt.executeQuery(querystring);
-        while(friendsEmails.next()){
-            friends.add(friendsEmails.getString(1));
+
+    public static ArrayList<String> getFriendsOfCleint(user cleint) {
+        ArrayList<String> friends = new ArrayList<String>();
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
+            Statement stmt = con.createStatement();
+
+            String querystring = new String("select user_email from  contacts where friend_email='" + cleint.getEmail() + "'");
+            ResultSet friendsEmails = stmt.executeQuery(querystring);
+            while (friendsEmails.next()) {
+                friends.add(friendsEmails.getString(1));
+            }
+            con.close();
+        } catch (Exception e) {
+
+            e.printStackTrace();
         }
-        con.close();
-       }catch(Exception e){
-       
-           e.printStackTrace();
-       }
-      
-       return friends;
-       
-        
-       
-       
+
+        return friends;
+
     }
-   public static user getUserDate(String user_email){
-       user Client=null;
-       try{
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
-        Statement stmt = con.createStatement();  
-        String querystring = new String("select * from  user where email='" + user_email + "'");
-        ResultSet userData = stmt.executeQuery(querystring);
-        userData.next();
-        Client=new user();
-        Client.setEmail(user_email);
-        Client.setUserName(userData.getString("user_name"));
-        Client.setFirstName(userData.getString("first_name"));
-        Client.setLastName(userData.getString("last_name"));
-        Client.setStatue(userData.getInt("status"));
-          
-        con.close();
-        
-   }catch(Exception e){
-   
-       e.printStackTrace();
-   }
-      return Client;
-       
-    
-   }
-   public static Vector<user> getFriendRequestsList(user myuser){
-       Vector friend_list = new Vector();
+
+    public static user getUserDate(String user_email) {
+        user Client = null;
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
+            Statement stmt = con.createStatement();
+            String querystring = new String("select * from  user where email='" + user_email + "'");
+            ResultSet userData = stmt.executeQuery(querystring);
+            userData.next();
+            Client = new user();
+            Client.setEmail(user_email);
+            Client.setUserName(userData.getString("user_name"));
+            Client.setFirstName(userData.getString("first_name"));
+            Client.setLastName(userData.getString("last_name"));
+            Client.setStatue(userData.getInt("status"));
+
+            con.close();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+        return Client;
+
+    }
+
+    public static Vector<user> getFriendRequestsList(user myuser) {
+        Vector friend_list = new Vector();
         try {
 
             //note the data base name should change according to the used database also username and passward
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
             Statement stmt = con.createStatement();
             String querystring = new String("select request_sender from  friend_requests where email='" + myuser.getEmail() + "'");
-          
+
             ResultSet friends = stmt.executeQuery(querystring);
             ResultSet friend_contact;
             user user;
@@ -309,8 +338,9 @@ public class DatabaseConnection {
             e.printStackTrace();
         }
         return friend_list;
-   }
-  public static int insertContact(String userEmail, String receiverEmail) {
+    }
+
+    public static int insertContact(String userEmail, String receiverEmail) {
         int flag = 3;
         try {
             Connection cn = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
@@ -325,37 +355,40 @@ public class DatabaseConnection {
             insertStmt.execute();
 
             /*PreparedStatement deleteStmt;
-            deleteStmt = cn.prepareStatement("delete from friend_requests (email, request_sender) values(?,?)");
-            deleteStmt.setString(1, userEmail);
-            deleteStmt.setString(2, receiverEmail);
-            deleteStmt.execute();
-                    */
-            Statement stmt=cn.createStatement();
-            String query="delete from friend_requests where request_sender='"+receiverEmail+"' and email ='"+userEmail+"'";
+             deleteStmt = cn.prepareStatement("delete from friend_requests (email, request_sender) values(?,?)");
+             deleteStmt.setString(1, userEmail);
+             deleteStmt.setString(2, receiverEmail);
+             deleteStmt.execute();
+             */
+            Statement stmt = cn.createStatement();
+            String query = "delete from friend_requests where request_sender='" + receiverEmail + "' and email ='" + userEmail + "'";
             stmt.executeUpdate(query);
             flag = 0;
             cn.close();
+
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseConnection.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseConnection.class
+                    .getName()).log(Level.SEVERE, null, ex);
             flag = 1;
         }
         return flag;
     }
-  public static int deleteFriendRequest(String userEmail, String receiverEmail) {
+
+    public static int deleteFriendRequest(String userEmail, String receiverEmail) {
         /**
-         * returns => 0 removed him from friend requests successfully
-         * returns => 1 failed //database error
+         * returns => 0 removed him from friend requests successfully returns =>
+         * 1 failed //database error
          */
         int flag = 3;
         try {
             Connection cn = DriverManager.getConnection("jdbc:mysql://localhost/firstdb", "root", "1234");
             /*PreparedStatement deleteStmt;
-            deleteStmt = cn.prepareStatement("delete from friend_requests (email, request_sender) values(?,?)");
-            deleteStmt.setString(1, receiverEmail);
-            deleteStmt.setString(2, userEmail);
-            deleteStmt.execute();*/
-            Statement stmt=cn.createStatement();
-            String query="delete from friend_requests where request_sender='"+receiverEmail+"' and email ='"+userEmail+"'";
+             deleteStmt = cn.prepareStatement("delete from friend_requests (email, request_sender) values(?,?)");
+             deleteStmt.setString(1, receiverEmail);
+             deleteStmt.setString(2, userEmail);
+             deleteStmt.execute();*/
+            Statement stmt = cn.createStatement();
+            String query = "delete from friend_requests where request_sender='" + receiverEmail + "' and email ='" + userEmail + "'";
             stmt.executeUpdate(query);
             flag = 0;
             cn.close();

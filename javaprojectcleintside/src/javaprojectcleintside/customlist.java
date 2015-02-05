@@ -64,10 +64,11 @@ public class customlist extends JPanel implements ListCellRenderer {
               p1.add(l);
             JLabel  l2=new  JLabel(value.toString());
               l2.setFont(new Font("Aharoni", Font.BOLD, 15));
-              if(isSelected){
+              l2.setForeground(new Color(0, 107, 172));
+             /* if(isSelected){
                   l2.setForeground(new Color(248,248,248));
               }
-              
+              */
              //l.setBackground(Color.white);
               p1. add("Center",l2);
               
@@ -104,13 +105,13 @@ public class customlist extends JPanel implements ListCellRenderer {
               p.add("West",p1);
               p.add("East",l);
               //p.setBackground(Color.white);
-            if (isSelected){
+          /*  if (isSelected){
              
             p.setBackground(new Color(0,107,172));
              p1.setBackground(new Color(0,107,172));
 
             }
-
+*/
                
             
         } catch (Exception ex) {
